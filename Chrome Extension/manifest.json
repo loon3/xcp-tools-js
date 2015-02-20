@@ -1,0 +1,21 @@
+{
+   "author": "Joe Looney",
+   "background": {
+      "scripts": [ "js/jquery.min.js", "js/bitcoinjs-min.js" ]
+   },
+   "browser_action": {
+      "default_icon": "icon-128.png",
+      "default_popup": "popup.html"
+   },
+   "description": "In Development",
+   "icons": {
+      "128": "icon-128.png",
+      "16": "icon-16.png",
+      "48": "icon-48.png"
+   },
+   "manifest_version": 2,
+   "name": "LTB Companion Wallet",
+   "permissions": [ "storage", "http://*/", "clipboardWrite", "clipboardRead" ],
+   "short_name": "LTB Companion Wallet",
+   "version": "0.0.1"
+}

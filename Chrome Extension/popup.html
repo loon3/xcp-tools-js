@@ -1,0 +1,134 @@
+<!doctype html>
+
+<html>
+<head>
+	
+<title>LTB Companion Wallet</title>
+   
+         
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" language="Javascript" src="js/bootstrap.min.js"></script>
+    <script src="popup.js"></script>
+
+    
+    <!-- from Countersign-->
+    <script src="js/mnemonic.js"></script>
+    <script src="js/bitcore/bitcore.min.js"></script>
+    <script src="js/bitcoinsig.js"></script>
+    <script src="js/brainlite.js"></script>
+    <script src="js/bitcoinjs-min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    
+    <script src="ticker.js"></script> 
+ 
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="main.css" />
+  
+    
+    
+</head>
+<body>	
+   
+    <div class="bg">
+        <div id="currenttoken" style="display: none;">LTBCOIN</div>
+        <div id="btcbalhide" style="display: none;">0</div>
+	   <div role="tabpanel">
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist" id="allTabs">
+    <li role="presentation" class="active" id="walletTab"><a id="walletLink" href="#walletPage" aria-controls="walletPage" role="tab" data-toggle="tab"><img src="wallet_icon.png"></a></li>
+    <li role="presentation" id="inventoryTab"><a href="#inventoryPage" aria-controls="inventoryPage" role="tab" data-toggle="tab"><img src="inventory_icon.png"></a></li>
+    <li role="presentation"><a href="#settingsPage" aria-controls="settingsPage" role="tab" data-toggle="tab"><img src="key-icon.png"></a></li>  
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="walletPage">
+        
+        
+        <div id="balanceBox" class="innershadow">
+			<span id="xcpbalance" style="font-size:28px">Loading...</span> 
+		</div>
+        
+        <div align="center">
+            <div id="fiatvaluebox" style="margin-top: 6px;">($<div style="display: inline-block;" id="xcpfiatValue"></div>)</div>
+            <div id="switchtoxcp">Switch to LTBCOIN</div>
+        </div>
+        
+		<div id="addressBox">           
+            <div id="xcpaddressTitle">Your Wallet Address</div>
+			<div id="xcpaddress"></div>
+		</div>
+        
+        
+           
+        <div align="center" style="width: 300px;">
+            <select id="addressselect" class="form-control" style="font-size: 12px;"></select>
+        </div>
+          
+            
+		
+        <div id="btcbalbox" class="whitebox">
+            <div id="btcbalance"></div>
+        </div>  
+
+        
+        
+    </div>
+    <div role="tabpanel" class="tab-pane" id="inventoryPage">
+    
+		<div id="allassets"></div>    
+    </div>
+    <div role="tabpanel" class="tab-pane" id="settingsPage">
+		
+
+	
+
+		
+
+		<div style="margin-top: 15px; padding: 5px;">
+			<div class="lead" align="center">Wallet/Key Settings:</div>
+			<a href="#" id="revealPassphrase" class="btn btn-primary btn-block keybutton">Reveal Passphrase</a>
+                <div id="passphrasebox" style="display: none;">
+                    <div id="newpassphrase">your passphrase</div>
+                </div>
+                <a href="#" id="manualPassphrase" class="btn btn-primary btn-block keybutton">Enter Passphrase Manually</a>
+                <div id="manualPassBox" style="display: none; margin-bottom: 10px;">
+                    
+                    
+<div class="row" style="padding: 0 10px 0 10px;">
+  <div class="col-xs-9">
+    <div style="width: 100%;"><input type="text" class="form-control" id="manualMnemonic"></div>
+  </div>
+  <div class="col-xs-3">
+    <button id="manualAddressButton" class="btn btn-default btn-block" style="width: 100%;">Go</button></div>
+  </div>
+</div>
+                    
+                  <a href="#" id="resetAddress" style="margin-bottom: 15px;" class="btn btn-primary btn-block keybutton">Generate New Passphrase</a>  
+            
+            
+                    
+                </div>
+                
+
+		</div>
+		
+	</div>  
+      
+    <div id="priceBox" title="Poloniex">
+            
+			<div id="ltbPrice">...</div>
+            <div id="priceSrc">LTBCOIN/USD</div>
+            <!--<div id="btcPrice" style="display: none;"></div>-->
+		</div>
+    
+  </div>
+
+ <div id="footer"><div id="nameversion" style="float: left; padding:1px 0 0 8px;"></div><img id="refreshWallet" src="refresh.png" height="16" width="16"></div>       
+        
+</div>
+
+</body>
+</html>
+
