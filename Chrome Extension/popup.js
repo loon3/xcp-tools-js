@@ -1,17 +1,71 @@
+function setEncryptedTest() {
+    
+    chrome.storage.local.set(
+                    {
+                        'encrypted': true
+                    }, function () {
+                    
+                       getStorage();
+                    
+                    });
+    
+}
+    
+    
+    
 function getStorage()
 {
-    chrome.storage.local.get(["passphrase"], function (data)
+    chrome.storage.local.get(["passphrase", "encrypted"], function (data)
     {
-        if ( data.passphrase != undefined)
-            {
-                existingPassphrase(data.passphrase);
-            } else {
-                newPassphrase();
-            }
+        if ( data.encrypted == false) {
+            
+            existingPassphrase(data.passphrase);
+            
+        } else if ( data.encrypted == true) {
+            
+            $(".hideEncrypted").hide();
+            
+            $("#pinsplash").show();
+            $("#priceBox").hide();
         
+        } else {
+            newPassphrase();
+        }
         //getRate();
     });
 }
+
+
+    
+
+
+
+
+//function getEncrypted()
+//{
+//    chrome.storage.local.get(["passphrase_encrypted"], function (data)
+//    {
+//        if ( data.passphrase_encrypted != undefined)
+//            {
+//                
+//            } 
+//    });
+//}
+//
+//
+//function setEncrypted(passphrase, password)
+//{
+//  chrome.storage.local.set(
+//                    {
+//                        'passphrase_encrypted': phraseList
+//                    }, function () {
+//                    
+//                        convertPassphrase(m);
+//                        assetDropdown(m);
+//                         $('#allTabs a:first').tab('show');
+//                    
+//                    });
+//}
 
 function showBTCtransactions(transactions) {
             
@@ -226,12 +280,14 @@ function newPassphrase()
     
     chrome.storage.local.set(
                     {
-                        'passphrase': phraseList
+                        'passphrase': phraseList,
+                        'encrypted': false
                     }, function () {
-                    
+                        
+                        $(".hideEncrypted").show();
                         convertPassphrase(m);
                         assetDropdown(m);
-                         $('#allTabs a:first').tab('show');
+                        $('#allTabs a:first').tab('show');
                     
                     });
 
@@ -246,16 +302,18 @@ function existingPassphrase(string) {
     
     $("#newpassphrase").html(string);
        
+    
     convertPassphrase(m2);
     assetDropdown(m2);
     
-      $('#allTabs a:first').tab('show')
+    $('#allTabs a:first').tab('show')
 }
 
 
 
 function manualPassphrase() {
     var string = $('#manualMnemonic').val().trim().toLowerCase();
+    $('#manualMnemonic').val("");
     string = string.replace(/\s{2,}/g, ' ');
     var array = string.split(" ");
     m2 = new Mnemonic(array);
@@ -267,12 +325,14 @@ function manualPassphrase() {
     
     chrome.storage.local.set(
                     {
-                        'passphrase': string
+                        'passphrase': string,
+                        'encrypted': false
                     }, function () {
                     
                         convertPassphrase(m2);
                         assetDropdown(m2);
     
+                        $(".hideEncrypted").show();
                         $("#manualPassBox").hide();
                         
                         

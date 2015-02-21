@@ -2,7 +2,11 @@ var bitcore = require('bitcore');
 
 $( document ).ready(function() {
     
+    $("#pinsplash").hide();
+    
+    
     getStorage();
+    //setEncryptedTest();
     
     //on open
     var manifest = chrome.runtime.getManifest();
@@ -31,35 +35,58 @@ $( document ).ready(function() {
         }
         };
 
+//
+//$(document).on("click", '#encryptbutton', function (event) { 
+//
+//    var message = $("#encryptPassword").val();
+//    var password = $("#encryptPassword").val();
+//    
+//    var encrypted = CryptoJS.AES.encrypt(message, password, { format: JsonFormatter });
+//
+//	$( "body" ).data(encrypted);
+//
+//    console.log(encrypted); 
+//   
+//    
+//});
+//
+//    
+//$(document).on("click", '#decryptbutton', function (event) { 
+//
+//	var password = $("#password").val();
+//	var encrypted = $( "body" ).data(encrypted);
+//
+//    var decrypted = CryptoJS.AES.decrypt(encrypted, password, { format: JsonFormatter });
+//
+//    console.log(decrypted.toString(CryptoJS.enc.Utf8)); // Message
+//    
+//});
 
-$(document).on("click", '#encryptbutton', function (event) { 
-
-    var message = $("#message").val();
-    var password = $("#password").val();
-    
-    var encrypted = CryptoJS.AES.encrypt(message, password, { format: JsonFormatter });
-
-	$( "body" ).data(encrypted);
-
-    console.log(encrypted); // {"ct":"tZ4MsEnfbcDOwqau68aOrQ==","iv":"8a8c8fd8fe33743d3638737ea4a00698","s":"ba06373c8f57179c"}
-    
-   
-    
-});
-
-    
-$(document).on("click", '#decryptbutton', function (event) { 
-
-	var password = $("#password").val();
-	var encrypted = $( "body" ).data(encrypted);
-
-    var decrypted = CryptoJS.AES.decrypt(encrypted, password, { format: JsonFormatter });
-
-    console.log(decrypted.toString(CryptoJS.enc.Utf8)); // Message
-    
-});
-
-  
+    $("#pinButton").click(function () {
+        
+        var pin = $("#inputPin").val();
+        
+        $("#inputPin").val("");
+        
+        chrome.storage.local.get(["passphrase"], function (data)
+        {         
+            var decrypted = CryptoJS.AES.decrypt(data.passphrase, pin, { format: JsonFormatter });          
+            var decrypted_passphrase = decrypted.toString(CryptoJS.enc.Utf8);
+            
+            console.log(decrypted_passphrase.length);
+            
+            if (decrypted_passphrase.length > 0) {
+                
+                $("#pinsplash").hide();
+                $(".hideEncrypted").hide();
+                
+                $("#priceBox").show();
+            
+                existingPassphrase(decrypted.toString(CryptoJS.enc.Utf8));
+                
+            }
+        });
+    });
     
     $('#myTab a').click(function (e) {
         e.preventDefault()
@@ -87,7 +114,7 @@ $(document).on("click", '#decryptbutton', function (event) {
     
     
     
-    $('#resetAddress').click(function ()
+    $('.resetAddress').click(function ()
         {
             newPassphrase();
         });
@@ -110,6 +137,18 @@ $(document).on("click", '#decryptbutton', function (event) {
                 //$("#revealPassphrase").html("Reveal Passphrase");
             } else {
                 $("#manualPassBox").show(); 
+                //$("#newpassphrase").hide();
+                //$("#revealPassphrase").html("Hide Passphrase");
+            }    
+        });
+    
+     $('#encryptPassphrase').click( function ()
+        {
+            if($("#encryptPassphraseBox").is(":visible")) {
+                $("#encryptPassphraseBox").hide();
+                //$("#revealPassphrase").html("Reveal Passphrase");
+            } else {
+                $("#encryptPassphraseBox").show(); 
                 //$("#newpassphrase").hide();
                 //$("#revealPassphrase").html("Hide Passphrase");
             }    
@@ -215,6 +254,30 @@ $(document).on("click", '#decryptbutton', function (event) {
     loadAssets(address);
       
   });  
+    
+   $(document).on("click", '#encryptPasswordButton', function (event) 
+    {
+        chrome.storage.local.get(["passphrase"], function (data)
+        {       
+            
+            var password = $("#encryptPassword").val();
+            $("#encryptPassword").val("");
+            var encrypted = CryptoJS.AES.encrypt(data.passphrase, password, { format: JsonFormatter });
+               
+            chrome.storage.local.set(
+                    {
+                        
+                        'passphrase': encrypted,
+                        'encrypted': true
+                        
+                    }, function () {
+                    
+                        $(".hideEncrypted").hide();
+                    
+                    });
+        
+        });
+    });
 
 
        

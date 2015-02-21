@@ -15,6 +15,23 @@ body
         margin: 5px 2px 5px 2px; 
         background-color: #fff;      
     }
+
+#pinsplash {
+	display: block;
+	z-index: 2;
+	background: #fafafa;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	text-align: center;
+    padding: 70px 50px 70px 50px;
+	/*opacity: 0.99;
+    filter: alpha(opacity=99); */
+}
+
+
 #priceBox
     {
 	position: absolute;
