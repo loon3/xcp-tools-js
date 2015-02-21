@@ -34,35 +34,13 @@ $( document ).ready(function() {
             return cipherParams;
         }
         };
+    
+    $("form").submit(function (e) {
+      e.preventDefault();
+    //};
 
-//
-//$(document).on("click", '#encryptbutton', function (event) { 
-//
-//    var message = $("#encryptPassword").val();
-//    var password = $("#encryptPassword").val();
-//    
-//    var encrypted = CryptoJS.AES.encrypt(message, password, { format: JsonFormatter });
-//
-//	$( "body" ).data(encrypted);
-//
-//    console.log(encrypted); 
-//   
-//    
-//});
-//
-//    
-//$(document).on("click", '#decryptbutton', function (event) { 
-//
-//	var password = $("#password").val();
-//	var encrypted = $( "body" ).data(encrypted);
-//
-//    var decrypted = CryptoJS.AES.decrypt(encrypted, password, { format: JsonFormatter });
-//
-//    console.log(decrypted.toString(CryptoJS.enc.Utf8)); // Message
-//    
-//});
 
-    $("#pinButton").click(function () {
+   // $("#pinButton").click(function () {
         
         var pin = $("#inputPin").val();
         

@@ -39,34 +39,6 @@ function getStorage()
     
 
 
-
-
-//function getEncrypted()
-//{
-//    chrome.storage.local.get(["passphrase_encrypted"], function (data)
-//    {
-//        if ( data.passphrase_encrypted != undefined)
-//            {
-//                
-//            } 
-//    });
-//}
-//
-//
-//function setEncrypted(passphrase, password)
-//{
-//  chrome.storage.local.set(
-//                    {
-//                        'passphrase_encrypted': phraseList
-//                    }, function () {
-//                    
-//                        convertPassphrase(m);
-//                        assetDropdown(m);
-//                         $('#allTabs a:first').tab('show');
-//                    
-//                    });
-//}
-
 function showBTCtransactions(transactions) {
             
             $("#btcbalance").html("<div style='font-size: 12px;'>You can perform "+transactions.toFixed(0)+" transactions</div><div id='depositBTC' align='center' style='margin: 5px; cursor: pointer; text-decoration: underline; font-size: 11px; color: #999;'>Deposit bitcoin for transaction fees</div>");
