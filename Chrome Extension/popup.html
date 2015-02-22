@@ -53,6 +53,7 @@
   <ul class="nav nav-tabs" role="tablist" id="allTabs">
     <li role="presentation" class="active" id="walletTab"><a id="walletLink" href="#walletPage" aria-controls="walletPage" role="tab" data-toggle="tab"><img src="wallet_icon.png"></a></li>
     <li role="presentation" id="inventoryTab"><a href="#inventoryPage" aria-controls="inventoryPage" role="tab" data-toggle="tab"><img src="inventory_icon.png"></a></li>
+      <li role="presentation" id="signTab"><a href="#signPage" aria-controls="signPage" role="tab" data-toggle="tab"><img src="sign_icon.png" height="24" width="24"></a></li>
     <li role="presentation"><a href="#settingsPage" aria-controls="settingsPage" role="tab" data-toggle="tab"><img src="key-icon.png"></a></li>  
   </ul>
 
@@ -78,7 +79,7 @@
         
            
         <div align="center" style="width: 300px;">
-            <select id="addressselect" class="form-control" style="font-size: 12px;"></select>
+            <select id="walletaddresses" class="addressselect form-control" style="font-size: 12px;"></select>
         </div>
           
             
@@ -93,6 +94,22 @@
     <div role="tabpanel" class="tab-pane" id="inventoryPage">
     
 		<div id="allassets"></div>    
+    </div>
+    <div role="tabpanel" class="tab-pane" id="signPage">
+    
+        <div id="preSign">
+		<div align="center" class="lead" style="margin: 30px 0 20px 0;">Select Address to Sign Message</div>  
+        <div align="center" style="width: 300px;">
+            <select id="signPubAddress" class="addressselect form-control" style="font-size: 12px;"></select>
+        </div>
+        <div style="width: 100%; padding: 0 5px 0 5px; margin: 10px 0 10px 0;"><input type="text" class="form-control" id="messagetosign" placeholder="Type your message here..."></div>
+        <div align="center" style="width: 100%; padding: 0 5px 0 5px;"><button id="signMessageButton" class="btn btn-primary btn-block">Sign</button></div>
+        </div>
+        
+        <div id="postSign" style="margin: 30px 0 15px 0; display: none; font-size: 11px;">        
+        </div>
+        
+        <div id="resetsignbox" style="display: none; margin: 0 0 30px 0;"><button id="resetSignButton" class="btn btn-primary btn-block">Reset</button></div>
     </div>
     <div role="tabpanel" class="tab-pane" id="settingsPage">
 		

@@ -220,7 +220,7 @@ function convertPassphrase(m){
 
 function assetDropdown(m)
 {
-    $("#addressselect").html("");
+    $(".addressselect").html("");
     
     var HDPrivateKey = bitcore.HDPrivateKey.fromSeed(m.toHex(), bitcore.Networks.livenet);
                 
@@ -232,9 +232,9 @@ function assetDropdown(m)
                            
         var pubkey = address1.toString();
                             
-        //$("#addressselect").append("<option label='"+pubkey.slice(0,8)+"...'>"+pubkey+"</option>");
+        //$(".addressselect").append("<option label='"+pubkey.slice(0,8)+"...'>"+pubkey+"</option>");
         
-        $("#addressselect").append("<option label='"+pubkey+"'>"+pubkey+"</option>");
+        $(".addressselect").append("<option label='"+pubkey+"'>"+pubkey+"</option>");
     }
 }
 
@@ -350,6 +350,76 @@ function loadAssets(add) {
         $("#xcpbalance").html(data);
     });
 };*/
+
+
+
+
+    		function makedSignedMessage(msg, addr, sig)
+    		{
+        		var qtHdr = [
+      			"<pre>-----BEGIN BITCOIN SIGNED MESSAGE-----",
+      			"-----BEGIN BITCOIN SIGNATURE-----",
+      			"-----END BITCOIN SIGNATURE-----</pre>"
+    			];
+                
+                return qtHdr[0]+'\n'+msg +'\n'+qtHdr[1]+'\nVersion: Bitcoin-qt (1.0)\nAddress: '+addr+'\n\n'+sig+'\n'+qtHdr[2];
+    		}
+    		
+    		function getprivkey(inputaddr, inputpassphrase){
+    			//var inputaddr = $('#inputaddress').val();
+    			
+    			//var string = inputpassphrase.val().trim().toLowerCase();
+                //string = string.replace(/\s{2,}/g, ' ');
+                var array = inputpassphrase.split(" ");
+                
+                m2 = new Mnemonic(array);
+                
+                var HDPrivateKey = bitcore.HDPrivateKey.fromSeed(m2.toHex(), bitcore.Networks.livenet);
+                
+                 
+                        for (var i = 0; i < 50; i++) {
+                            
+                            var derived = HDPrivateKey.derive("m/0'/0/" + i);
+                            var address1 = new bitcore.Address(derived.publicKey, bitcore.Networks.livenet);
+                           
+                            var pubkey = address1.toString();
+                            
+                            if (inputaddr == pubkey) {
+                            var privkey = derived.privateKey.toWIF();
+                            break;
+                            
+                            }
+                        }
+                
+                return privkey;
+    		}
+    		
+    		
+    		
+    		function signwith(privkey, pubkey, message) {
+    			
+    			
+    			
+    			//var message = "Message, message";
+      			var p = updateAddr(privkey, pubkey);
+      			
+      			if ( !message || !p.address ){
+        		return;
+      			}
+
+      			message = fullTrim(message);
+
+      			
+        		var sig = sign_message(p.key, message, p.compressed, p.addrtype);
+   
+
+      			sgData = {"message":message, "address":p.address, "signature":sig};
+
+      			signature_final = makedSignedMessage(sgData.message, sgData.address, sgData.signature);
+    			
+    			return signature_final;
+    
+    		}
 
 
 

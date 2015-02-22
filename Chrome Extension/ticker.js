@@ -71,7 +71,7 @@ $( document ).ready(function() {
         $(this).tab('show')
     });
     
-    $( "#addressselect" ).change(function () {
+    $( "#walletaddresses" ).change(function () {
     
     var addr = $(this).val();
     
@@ -257,6 +257,32 @@ $( document ).ready(function() {
         });
     });
 
+    $('#signMessageButton').click(function ()
+        {
+            var inputaddr = $("#signPubAddress").val();
+            var inputpassphrase = $("#newpassphrase").html();
+            var message = $("#messagetosign").val();
+            
+            var privkey = getprivkey(inputaddr, inputpassphrase);
+            var signed = signwith(privkey, inputaddr, message)
+            
+            $("#postSign").html(signed);
+            
+            $("#postSign").show();
+            $("#resetsignbox").show();
+            
+            $("#preSign").hide();
+             
+        });
+    
+    $('#resetSignButton').click(function ()
+        {
+            $("#messagetosign").val("");
+            $("#resetsignbox").hide();
+            $("#postSign").hide();
+            
+            $("#preSign").show();            
+        });   
 
        
 });
