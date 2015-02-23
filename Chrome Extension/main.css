@@ -74,9 +74,14 @@ body
 	margin: 10px 5px 10px 5px;
 }
 
-#btcbalbox
+#btcsendbox
 {
+    padding: 8px 5px 11px 5px; 
+    margin: 0 5px 0 5px; 
+    background-color: #000; 
+    margin-bottom: 30px; 
     display: none;
+    border-radius: 5px;
 }
 
 .whitebox
@@ -98,6 +103,15 @@ body
 	font-weight: bold;
 	font-size: 14px;
     margin-bottom: -12px;
+}
+
+.inputtitle
+{
+	text-align: left;
+	font-weight: bold;
+	font-size: 14px;
+    margin: 0 0 5px 5px;
+    color: #fff;
 }
 
 

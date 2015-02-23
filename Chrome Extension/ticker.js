@@ -163,6 +163,12 @@ $( document ).ready(function() {
  
   $(document).on("click", '#refreshWallet', function (event)
   {
+      $("#sendtokenbutton").html("Send Token");
+      $("#sendtokenbutton").prop('disabled', false);
+      
+      $("#sendtoaddress").val("");
+      $("#sendtoamount").val("");
+      
       var assetbalance = $("#xcpbalance").html();
       var array = assetbalance.split(" ");
       
@@ -171,6 +177,8 @@ $( document ).ready(function() {
       var currenttoken = $("#currenttoken").html();
       
       getRate(array[0], pubkey, currenttoken);
+      
+      getPrimaryBalance(pubkey);
   });
     
   $('#switchtoxcp').click(function ()
@@ -283,6 +291,61 @@ $( document ).ready(function() {
             
             $("#preSign").show();            
         });   
+    
+    $('#sendtokenbutton').click(function ()
+        {
+            $("#sendtokenbutton").html("Sending...");
+            $("#sendtokenbutton").prop('disabled', true);
+            
+            var assetbalance = $("#xcpbalance").html();
+            var array = assetbalance.split(" ");
+            var currentbalance = parseFloat(array[0]);
+      
+            var pubkey = $("#xcpaddress").html();
+            //var currenttoken = $("#currenttoken").html();
+            
+            var sendtoaddress = $("#sendtoaddress").val();
+            var sendtoamount_text = $("#sendtoamount").val();
+            var sendtoamount = parseFloat(sendtoamount_text);
+                       
+            var minersfee = 0.0001;
+            
+            var totalsend = parseFloat(sendtoamount) + minersfee;
+     
+            if (bitcore.Address.isValid(sendtoaddress)){
+                
+                if (isNaN(sendtoamount) == true) {
+                
+                    $("#sendtoamount").val("Invalid Amount");
+                
+                } else {
+            
+                    if (totalsend > currentbalance) {
+            
+                        $("#sendtoamount").val("Insufficient Funds");
+                
+                    } else {
+                
+                        sendBTC(pubkey, sendtoaddress, sendtoamount, minersfee);
+                        
+                         $("#sendtoaddress").val("");
+                         $("#sendtoamount").val("");
+                
+                        $("#sendtokenbutton").html("Sent! Refresh to continue...");
+                
+                    }
+                
+                }
+                
+            } else {
+                
+                $("#sendtoaddress").val("Invalid Address");
+                
+            }
+            
+            
+            
+        });
 
        
 });

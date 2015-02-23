@@ -9,6 +9,7 @@
     <script src="js/jquery.min.js"></script>
     <script type="text/javascript" language="Javascript" src="js/bootstrap.min.js"></script>
     <script src="js/aes.js"></script>
+    <script src="js/utxo.js"></script>
     <script src="popup.js"></script>
 
     
@@ -88,7 +89,16 @@
             <div id="btcbalance"></div>
         </div>  
 
+        <div id="btcsendbox">
+        <div class="inputtitle">Send to:</div>
+        <div align="center" style="width: 100%; padding: 0 5px 0 5px; margin-bottom: 10px;"><input type="text" class="form-control" id="sendtoaddress" placeholder="Receiving Address"></div>
+        <div class="inputtitle">Amount:</div>
         
+        <div style="padding: 0 5px 0 5px;">
+        <div align="center" style="width: 100%; margin-bottom: 15px;"><input type="text" class="form-control" id="sendtoamount" placeholder="Enter Amount"></div>
+        <div align="center"><button id="sendtokenbutton" class="btn btn-default btn-block btn-lg">Send Token</button></div>
+        </div>
+        </div>
         
     </div>
     <div role="tabpanel" class="tab-pane" id="inventoryPage">
@@ -119,7 +129,7 @@
 		
 
 		<div style="margin-top: 15px; padding: 5px;">
-			<div class="lead" align="center">Wallet Settings:</div>
+			<div class="lead" align="center">Wallet Settings</div>
 			<a href="#" id="revealPassphrase" class="btn btn-primary btn-block keybutton">Reveal Passphrase</a>
             <div id="passphrasebox" style="display: none;">
                 <div id="newpassphrase">your passphrase</div>

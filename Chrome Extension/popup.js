@@ -117,6 +117,7 @@ function getPrimaryBalanceXCP(pubkey, currenttoken) {
 }
 
 function getPrimaryBalanceBTC(pubkey){
+        
     var source_html = "https://blockchain.info/q/addressbalance/"+pubkey;
     
     $.getJSON( source_html, function( data ) { 
@@ -125,6 +126,12 @@ function getPrimaryBalanceBTC(pubkey){
         
         $("#xcpbalance").html(bitcoinparsed + "<br><div style='font-size: 22px; font-weight: bold;'>BTC</div>");
         
+        if (bitcoinparsed.toFixed(8) == 0) {
+            $("#btcsendbox").hide();
+        } else {
+            $("#btcsendbox").show();
+        }
+        
         getRate(bitcoinparsed, pubkey, "BTC");
         
         
@@ -132,6 +139,8 @@ function getPrimaryBalanceBTC(pubkey){
 }
 
 function getPrimaryBalance(pubkey){
+    
+    $("#btcsendbox").hide();
     
     var currenttoken = $("#currenttoken").html();
    
