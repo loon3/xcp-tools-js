@@ -320,7 +320,7 @@ $( document ).ready(function() {
                 
                 } else {
             
-                    if (totalsend > currentbalance) {
+                    if (totalsend > currentbalance || totalsend < minersfee) {
             
                         $("#sendtoamount").val("Insufficient Funds");
                 
