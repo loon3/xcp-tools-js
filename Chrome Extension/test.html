@@ -4,19 +4,22 @@
     <script src="js/bitcore/bitcore.min.js"></script>
     <script src="js/mnemonic.js"></script>
     <script src="js/utxo.js"></script>
+    <script src="js/xcpdata.js"></script>
 <script>
     
-var bitcore = require('bitcore');
-
-$( document ).ready(function() {
+assetid('LTBCOIN');
     
-    if (bitcore.Address.isValid("1Dhx3kGVkLaVFDYacZARheNzAWhYPTxHLq")){
-        console.log("valid");
-    } else {
-        console.log("not valid");
-    }
+//var bitcore = require('bitcore');
     
-});    
+//$( document ).ready(function() {
+//    
+//    if (bitcore.Address.isValid("1Dhx3kGVkLaVFDYacZARheNzAWhYPTxHLq")){
+//        console.log("valid");
+//    } else {
+//        console.log("not valid");
+//    }
+//    
+//});    
     
 //sendBTC("1Dhx3kGVkLaVFDYacZARheNzAWhYPTxHLq", "1GcFhAQGFZVDAr4jiR2tKwisHcgNUjhGNC", 0.003, 0.0001);
 </script>
