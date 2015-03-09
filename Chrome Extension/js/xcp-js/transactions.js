@@ -11,8 +11,13 @@ function assetid(asset_name) {
     }    
      
     var asset_id = n;
+    
+    return asset_id;
+    
+}
 
-    //return asset_id;
-    console.log(asset_id);
-
+function decode_xcpdata(key, datachunk) {
+    
+    return bin2hex(rc4(hex2bin(key), hex2bin(datachunk)));
+    
 }
