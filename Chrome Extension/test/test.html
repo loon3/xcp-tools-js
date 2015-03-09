@@ -10,35 +10,150 @@
     
 <script>
  
-
-
-var datachunk_enc = "21f5025b3201b5deadb05c19e70210930044a8671f14d3c718b763099656d8a4a6da738815f683fc972205a29e57709f46ed38f7ce3e192780632ce578f4";    
-var key = "91aa59e3e92e5c0ece9bc53daf82f7f58e8b53549b27b33e35d3db5f7745f76e";
+function get_xcp_encoded(tx_id, addr, callback) {
     
-var datachunk_dec = "1c434e54525052545900000000000000000004ebdf000000e8d4a51000000000000000000000000000000000000000000000000000000000000000000000";
+    var source_html = "http://blockchain.info/rawaddr/"+addr+"?format=json";
+    
+    var target_tx = new Array(); 
+     
+    $.getJSON( source_html, function( data ) {
+    
+        var tx_ids = new Array();
+        
+        var outputdata = new Array();
+               
+        $.each(data.txs, function(i) {
+            
+            var current_tx_id = data.txs[i].hash;
+            
+            var current_tx_index = new Array();
+            
+            $.each(data.txs[i].out, function(j) {
+            
+                current_tx_index.push(data.txs[i].out[j].tx_index);
+            
+            });
+            
+            var obj = {
+                "txid": current_tx_id,
+                "txindex": current_tx_index
+             };
+            
+            tx_ids.push(obj);
+            
+        });    
+            
+            
+        
+        if (tx_ids.length > 0) {    
+               
+            $.each(data.txs, function(i) {
+                
+                var trans_hash = data.txs[i].hash;
+                         
+                if (tx_id == trans_hash){
+                        
+                    target_tx = data.txs[i];
+                        
+                    target_txindex = data.txs[i].inputs[0].prev_out.tx_index;  
+                        
+                    console.log(target_txindex);
+                
+                    for (j=1; ; j++){
+                        if(tx_ids[i+j].txindex.indexOf(target_txindex) > -1){
+                            var key_utxo = tx_ids[i+j].txid;  
+                            break;
+                        } 
+                    }
+                
+                    outputdata[0] = key_utxo;
+                        
+                };    
+                             
+            });
+            
+        }
+                
+                
+        console.info(JSON.stringify(tx_ids));
+        
+        console.log(outputdata[0]);
+               
+        
+        
+        $.each(target_tx['out'], function(i, item) {
+            
+            if ("addr3" in target_tx['out'][i]){
+                var target_script = target_tx['out'][i].script;
+                var haystack = target_script;
+    
+                var finddata = haystack.substring(68, 6);
+                finddata += haystack.substring(136, 74);
+    
+                outputdata[1] = finddata;
+            }
+            
+            
+        });
+        
+        var xcp_encoded = xcp_rc4(outputdata[0], outputdata[1]);
+        
+        callback(xcp_encoded);
+            
+    });
+        
+} 
    
-    
-console.log(xcp_rc4(key, datachunk_dec));
    
+$( document ).ready(function() {
+        
+//    var tx_id1 = "d48db528ff4b7f9bcb124a9b705b0a9ce8cbc41f1b74a26864501c005952fd06";
+//    var addr1 = "15NKbHLz7xmU3jVawTmVXWZHDWYZ1u4M8L"; 
+//    
+//    var tx_id2 = "f2e5ce618f195110daee9ef4a33c2fc27582074584a3efaa41bf42a21cd58c96";
+//    var addr2 = "1GEMZsZZQ32YqX3nzBptQLJBAtn1XByRCZ"; 
     
+    $("#getdatabutton").click(function(){
+        
+        var tx_id = $("#tx_id").val();
+        var addr = $("#addr").val();
+        
+        get_xcp_encoded(tx_id, addr, function(s){
+            $("#arc").html(s);
+            var asset = s.substring(42, 26);
+            var amount = s.substring(58, 42);
+            var asset_dec = parseInt(asset, 16);
+            var amount_dec = parseInt(amount, 16) / 100000000;
+            
+            $("#assetid").html(asset_dec);
+            $("#assetamt").html(amount_dec);
+        });
+    });
+       
+    console.log(assetid("SJCX"));
+
+});
     
 
-    
-//var bitcore = require('bitcore');
-    
-//$( document ).ready(function() {
-//    
-//    if (bitcore.Address.isValid("1Dhx3kGVkLaVFDYacZARheNzAWhYPTxHLq")){
-//        console.log("valid");
-//    } else {
-//        console.log("not valid");
-//    }
-//    
-//});    
-    
-//sendBTC("1Dhx3kGVkLaVFDYacZARheNzAWhYPTxHLq", "1GcFhAQGFZVDAr4jiR2tKwisHcgNUjhGNC", 0.003, 0.0001);
 </script>
 </head>
 <body>
+    <h1 style="margin-top: 20px;">Extract XCP Asset Send Transaction Data (multi-sig encoded only)</h1>
+    <div style="margin-top: 50px;">Tx Hash</div>
+    <input type="text" id="tx_id" value="d48db528ff4b7f9bcb124a9b705b0a9ce8cbc41f1b74a26864501c005952fd06" label="Tx Hash" required>
+    <div style="margin-top: 20px;">Source Address</div>
+    <input type="text" id="addr" value="15NKbHLz7xmU3jVawTmVXWZHDWYZ1u4M8L" label="Source Address" required>
+    <div style="margin-top: 20px;">
+    <input type="button" id="getdatabutton" value="Get XCP Data">
+    
+    
+    
+    
+    <div style="margin-top: 50px;">Hashed Data: <span id="arc"></span></div>
+    
+    <div style="margin-top: 20px;">Asset ID: <span id="assetid"></span></div>
+        
+    <div style="margin-top: 20px;">Asset Amount: <span id="assetamt"></span></div>
+
 </body>
 </html>
