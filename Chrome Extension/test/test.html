@@ -12,7 +12,7 @@
  
 function get_xcp_encoded(tx_id, addr, callback) {
     
-    var source_html = "http://blockchain.info/rawaddr/"+addr+"?format=json";
+    var source_html = "https://blockchain.info/multiaddr?active="+addr+"&cors=true";
     
     var target_tx = new Array(); 
      
