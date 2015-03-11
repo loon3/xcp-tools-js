@@ -11,7 +11,7 @@
     
 <script>
  
-
+var bitcore = require('bitcore');
    
 $( document ).ready(function() {
           
@@ -25,13 +25,20 @@ $( document ).ready(function() {
             var amount = s.substring(58, 42);
             var asset_dec = parseInt(asset, 16);
             var amount_dec = parseInt(amount, 16) / 100000000;
-            
+
             $("#assetid").html(asset_dec);
             $("#assetamt").html(amount_dec);
+            
+            var xcp_send_data = create_xcp_send_data("LTBCOIN", 119.40378009)
+            
+            console.log(s);
+            console.log(xcp_send_data);
+            
+            var test = xcp_rc4("821f32419f45088ef1550683039b60ed1d8e4975418ef3296ab34dca23aeacd2", xcp_send_data);
+            console.log(test);
+    
         });
     });
-       
-    //console.log(assetid("SJCX"));
 
 });
     
@@ -41,7 +48,7 @@ $( document ).ready(function() {
 <body>
     <h1 style="margin-top: 20px;">Extract XCP Asset Send Transaction Data (multi-sig encoded only)</h1>
     <div style="margin-top: 50px;">Tx Hash</div>
-    <input type="text" id="tx_id" value="d48db528ff4b7f9bcb124a9b705b0a9ce8cbc41f1b74a26864501c005952fd06" label="Tx Hash" required>
+    <input type="text" id="tx_id" value="42ffc07919b1fc4a8a92ca318bf3b6fe611fd128b646c7406873cf84cece4834" label="Tx Hash" required>
 
     <div style="margin-top: 20px;">
     <input type="button" id="getdatabutton" value="Get XCP Data">
