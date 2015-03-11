@@ -17,11 +17,10 @@ function assetid(asset_name) {
 }
 
 
-
-
 function xcp_rc4(key, datachunk) {
     
     return bin2hex(rc4(hex2bin(key), hex2bin(datachunk)));
     
 }
+
 
