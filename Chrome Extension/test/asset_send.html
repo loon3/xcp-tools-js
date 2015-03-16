@@ -55,7 +55,7 @@ $( document ).ready(function() {
         var divisible = $("#divisible").val();  //is asset divisible?
         
         if (divisible == "false") {
-            asset_total = asset_total / 100000000;
+            asset_total = parseFloat(asset_total) / 100000000;
         }
         
         
