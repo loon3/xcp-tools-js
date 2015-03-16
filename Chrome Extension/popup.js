@@ -53,7 +53,7 @@ function qrdepositDropdown() {
             
             var currentaddr = $("#xcpaddress").html();
             
-            $("#btcbalance").html("Deposit bitcoin for transaction fees<div style='margin: 20px 0 10px 0; font-size: 10px; font-weight: bold;'>"+currentaddr+"</div><div id='btcqr' style='margin: 10px auto 20px auto; height: 100px; width: 100px;'></div><div>Cost per transaction is 0.00043230 BTC</div></div>");
+            $("#btcbalance").html("Deposit bitcoin for transaction fees<div style='margin: 20px 0 10px 0; font-size: 10px; font-weight: bold;'>"+currentaddr+"</div><div id='btcqr' style='margin: 10px auto 20px auto; height: 100px; width: 100px;'></div><div>Cost per transaction is 0.00015470 BTC</div></div>");
                                   
             var qrcode = new QRCode(document.getElementById("btcqr"), {
     			text: currentaddr,
@@ -78,9 +78,9 @@ function getBTCBalance(pubkey) {
         
         $("#btcbalhide").html(bitcoinparsed);
         
-        var transactions = parseFloat(data) / 43230;
+        var transactions = (parseFloat(data) / 15470) ;
         
-        if (transactions >= 1) {
+        if (transactions >= 2) {// to include escrow amount req'd and tx fee
         
            showBTCtransactions(transactions);
             
@@ -101,7 +101,7 @@ function getPrimaryBalanceXCP(pubkey, currenttoken) {
        // $.each(data.data, function(i, item) {
             var assetname = data.data[0].asset;   
         //    if (assetname == currenttoken){                
-                var assetbalance = data.data[0].balance;   
+                var assetbalance = parseFloat(data.data[0].balance) + parseFloat(data.data[0].unconfirmed_balance);   
                 $("#xcpbalance").html(assetbalance + "<br><div style='font-size: 22px; font-weight: bold;'>" + currenttoken + "</div>");
                 getRate(assetbalance, pubkey, currenttoken);
                      

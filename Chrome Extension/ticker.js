@@ -147,7 +147,7 @@ $( document ).ready(function() {
         } else {
       
             var currentaddr = $("#xcpaddress").html();
-            $("#btcbalance").append("<div id='moreBTCinfo'><div style='margin: 20px 0 10px 0; font-size: 10px; font-weight: bold;'>"+currentaddr+"</div><div id='btcqr' style='margin: 10px auto 20px auto; height: 100px; width: 100px;'></div><div>Cost per transaction is 0.00043230 BTC.</div></div>");  
+            $("#btcbalance").append("<div id='moreBTCinfo'><div style='margin: 20px 0 10px 0; font-size: 10px; font-weight: bold;'>"+currentaddr+"</div><div id='btcqr' style='margin: 10px auto 20px auto; height: 100px; width: 100px;'></div><div>Cost per transaction is 0.0001547 BTC.</div></div>");  
             var qrcode = new QRCode(document.getElementById("btcqr"), {
     			text: currentaddr,
     			width: 100,

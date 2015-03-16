@@ -25,16 +25,18 @@ function get_xcp_encoded(tx_id, callback) {
     
                 var xcp_pubkey_data = finddata;
                 
+                console.log(xcp_pubkey_data);
+                
                 var source_html_tx_index = "https://blockchain.info/tx-index/"+tx_index+"?format=json&cors=true";
     
                     $.getJSON( source_html_tx_index, xcp_pubkey_data, function( data ) {
         
-                        console.log(data.hash);
-                        console.log(xcp_pubkey_data);
+                        //console.log(data.hash);
+                        //console.log(xcp_pubkey_data);
         
                         var xcp_decoded = xcp_rc4(data.hash, xcp_pubkey_data);
         
-                        callback(xcp_decoded);
+                        callback(data.hash, xcp_decoded);
         
                     });
                 
