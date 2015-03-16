@@ -19,24 +19,6 @@ var bitcore = require('bitcore');
    
 $( document ).ready(function() {
           
-    $("#getdatabutton").click(function(){
-        
-        var tx_id = $("#tx_id").val();
-        
-        get_xcp_encoded(tx_id, function(utxo_hash, data_chunk){
-            $("#arc").html(data_chunk);
-            var asset = data_chunk.substring(42, 26);
-            var amount = data_chunk.substring(58, 42);
-            var asset_dec = parseInt(asset, 16);
-            var amount_dec = parseInt(amount, 16) / 100000000;
-
-            $("#assetid").html(asset_dec);
-            $("#assetamt").html(amount_dec);
-    
-        });
-    });
-    
-    
     $("#gettransbutton").click(function(){
     
         var mnemonic = $("#mnemonic").val();
