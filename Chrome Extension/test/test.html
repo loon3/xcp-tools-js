@@ -19,23 +19,14 @@ $( document ).ready(function() {
         
         var tx_id = $("#tx_id").val();
         
-        get_xcp_encoded(tx_id, function(s){
-            $("#arc").html(s);
-            var asset = s.substring(42, 26);
-            var amount = s.substring(58, 42);
+        get_xcp_encoded(tx_id, function(utxo_hash, data_chunk){
+            $("#arc").html(data_chunk);
+            var asset = data_chunk.substring(42, 26);
+            var amount = data_chunk.substring(58, 42);
             var asset_dec = parseInt(asset, 16);
             var amount_dec = parseInt(amount, 16) / 100000000;
-
             $("#assetid").html(asset_dec);
             $("#assetamt").html(amount_dec);
-            
-            var xcp_send_data = create_xcp_send_data("LTBCOIN", 119.40378009)
-            
-            console.log(s);
-            console.log(xcp_send_data);
-            
-            var test = xcp_rc4("821f32419f45088ef1550683039b60ed1d8e4975418ef3296ab34dca23aeacd2", xcp_send_data);
-            console.log(test);
     
         });
     });
