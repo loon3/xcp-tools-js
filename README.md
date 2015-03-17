@@ -1,6 +1,6 @@
 # XCP Tools JS
 
-Javascript tools for encoding and decoding Counterparty (http://counterparty.io) data in Bitcoin transactions
+Javascript tools for encoding and decoding Counterparty (http://counterparty.io) data (multi-sig method only) in Bitcoin transactions
 
 Currently under development, use at your own risk!
 
