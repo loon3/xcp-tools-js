@@ -1,8 +1,6 @@
-# LTB Companion Wallet
+# XCP Tools JS
 
-[![Join the chat at https://gitter.im/loon3/LTB-Companion-Wallet](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/loon3/LTB-Companion-Wallet?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-Chrome Extension Bitcoin/Counterparty Wallet for use with letstalkbitcoin.com
+Javascript tools for encoding and decoding Counterparty (http://counterparty.io) data in Bitcoin transactions
 
 Currently under development, use at your own risk!
 
