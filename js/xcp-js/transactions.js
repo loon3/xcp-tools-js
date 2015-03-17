@@ -127,6 +127,36 @@ function addresses_from_datachunk(datachunk) {
     
 }
 
+
+ function getprivkey(inputaddr, inputpassphrase){
+    
+
+                var array = inputpassphrase.split(" ");
+                
+                m2 = new Mnemonic(array);
+                
+                var HDPrivateKey = bitcore.HDPrivateKey.fromSeed(m2.toHex(), bitcore.Networks.livenet);
+                
+                 
+                        for (var i = 0; i < 50; i++) {
+                            
+                            var derived = HDPrivateKey.derive("m/0'/0/" + i);
+                            var address1 = new bitcore.Address(derived.publicKey, bitcore.Networks.livenet);
+                           
+                            var pubkey = address1.toString();
+                            
+                            if (inputaddr == pubkey) {
+                            var privkey = derived.privateKey.toWIF();
+                            break;
+                            
+                            }
+                        }
+                
+                return privkey;
+
+ }
+
+
 function sendXCP(add_from, add_to, asset, asset_total, btc_total, msig_total, transfee, mnemonic) {
        
     //var mnemonic = $("#newpassphrase").html();
