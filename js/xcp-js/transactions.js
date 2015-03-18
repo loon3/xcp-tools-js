@@ -29,22 +29,33 @@ function hex_byte() {
 }
 
 function assetid(asset_name) {
+    
+    asset_name.toUpperCase();
 
-    var b26_digits = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
-    var name_array = asset_name.split("");
+    if(asset_name != "XCP"){
     
-    var n = 0;
+        var b26_digits = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+        var name_array = asset_name.split("");
     
-    for (i = 0; i < name_array.length; i++) { 
-        n *= 26;
-        n += b26_digits.indexOf(name_array[i]);
-    }    
+        var n = 0;
+    
+        for (i = 0; i < name_array.length; i++) { 
+            n *= 26;
+            n += b26_digits.indexOf(name_array[i]);
+        }    
      
-    var asset_id = n;
+        var asset_id = n;
+    
+    } else {
+        
+        var asset_id = 1;
+        
+    }
     
     return asset_id;
     
 }
+
 
 function create_xcp_send_data(asset_name, amount) {
     
