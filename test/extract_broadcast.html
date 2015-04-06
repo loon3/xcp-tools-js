@@ -16,40 +16,88 @@ var bitcore = require('bitcore');
 $( document ).ready(function() {
           
     $("#getdatabutton").click(function(){
-        
-        var tx_id = $("#tx_id").val();
+          
+	function removeA(arr) {
+    		var what, a = arguments, L = a.length, ax;
+    		while (L > 1 && arr.length) {
+        		what = a[--L];
+        		while ((ax= arr.indexOf(what)) !== -1) {
+        		    arr.splice(ax, 1);
+        		}
+    		}
+    		return arr;
+	}
 
-//      Send Transaction
-        
-//        get_xcp_encoded(tx_id, function(utxo_hash, data_chunk){
-//            $("#arc").html(data_chunk);
-//            var asset = data_chunk.substring(42, 26);
-//            var amount = data_chunk.substring(58, 42);
-//            var asset_dec = parseInt(asset, 16);
-//            var amount_dec = parseInt(amount, 16) / 100000000;
-//            $("#assetid").html(asset_dec);
-//            $("#assetamt").html(amount_dec);
-//    
-//        });
+
+	function conv_floating_pt(value_array) {
+	    	var buffer = new ArrayBuffer(8);
+		var bytes = new Uint8Array(buffer);
+		var doubles = new Float64Array(buffer); 
+
+		bytes[7] = "0x" + value_array[0];
+		bytes[6] = "0x" + value_array[1];
+		bytes[5] = "0x" + value_array[2];
+		bytes[4] = "0x" + value_array[3];
+		bytes[3] = "0x" + value_array[4];
+		bytes[2] = "0x" + value_array[5];
+		bytes[1] = "0x" + value_array[6];
+		bytes[0] = "0x" + value_array[7];
+
+		var value_final = doubles[0];
+
+		return value_final;
+	}
+
+	var tx_id = $("#tx_id").val();
         
         
         get_xcp_encoded(tx_id, function(utxo_hash, data_chunk){
             $("#arc").html(data_chunk);
+
             var data = data_chunk.substring(60, 26);
+
+	    var feefraction_hex = data.slice(-10);
+	    var feefraction_hex = feefraction_hex.slice(0,-2);
+	    var feefraction = parseInt(feefraction_hex,16) / 100000000;	
+
+
+	    var value_hex = data.substring(8);	
+            var value_hex = value_hex.slice(0, -10);	
+	    var value_array = value_hex.match(/.{2}/g);
+	    
+	    var value_final = conv_floating_pt(value_array);
+
+ 	    var total_length_hex = data_chunk.substring(0,2);
+	    console.log(parseInt(total_length_hex, 16));
+
+            var message_length_hex = data.slice(-2);
+	    console.log(parseInt(message_length_hex, 16));
+
+	
             var message_hex = data_chunk.substring(124, 60);
             var timestamp_hex = data.substring(0,8);
             
-            
-            
-            //var amount_dec = parseInt(amount, 16) / 100000000;
-            
+
+	    var message_hex_array = message_hex.match(/.{2}/g);	
+	    removeA(message_hex_array, '00');	
+	    var message_length = message_hex_array.length;	
+
+
+
             var message = hex2bin(message_hex);
-            var timestamp = parseInt(timestamp_hex, 16);
+
+	    var timestamp = parseInt(timestamp_hex, 16);
             
             
             $("#assetid").html(data);
             $("#timestamp").html(timestamp);
+	    $("#value").html(value_final);
+	    $("#feefraction").html(feefraction);
             $("#broadcasttext").html(message);
+
+	    
+	    console.log(message);	
+	    console.log(message_length);	
     
         });
     });
@@ -60,9 +108,9 @@ $( document ).ready(function() {
 </script>
 </head>
 <body>
-    <h1 style="margin-top: 20px;">Extract XCP Asset Send Transaction Data (multi-sig encoded only)</h1>
+    <h1 style="margin-top: 20px;">Extract XCP Broadcast Transaction Data (multi-sig encoded only)</h1>
     <div style="margin-top: 50px;">Bitcoin Tx Hash</div>
-    <input type="text" id="tx_id" label="Tx Hash" value="6c6ebf5a19be3601a9e10a4722e73ae5bfbcbce0f9917e57dc71cc3305bd5741" required>
+    <input type="text" id="tx_id" label="Tx Hash" value="1685ebe0931f90a776de9868c516c86cac2f9fb196a5cc4de7ce497fa5a53ca2" required>
 
     <div style="margin-top: 20px;">
     <input type="button" id="getdatabutton" value="Get XCP Data">
@@ -83,6 +131,10 @@ $( document ).ready(function() {
     <div style="margin-top: 20px;">Broadcast Data: <span id="assetid"></span></div>
         
     <div style="margin-top: 20px;">Timestamp: <span id="timestamp"></span></div>
+
+    <div style="margin-top: 20px;">Value: <span id="value"></span></div>
+
+    <div style="margin-top: 20px;">Fee Fraction: <span id="feefraction"></span></div>
         
     <div style="margin-top: 20px;">Text: <span id="broadcasttext"></span></div>
 
