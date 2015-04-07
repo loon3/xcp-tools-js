@@ -67,8 +67,11 @@ function assetid(asset_name) {
 function create_broadcast_data(message, value, feefraction) {
     
     //max 32 character broadcast for single OP_CHECKMULTISIG output
+    //fee fraction must be less than 42.94967295 to be stored as a 4-byte hexadecimal
     
-    if (message.length <= 32) {
+    var feefraction_int = parseFloat(feefraction) * 100000000;
+    
+    if (message.length <= 32 && feefraction <= 4294967295) {
         
         var currenttime = Math.floor(Date.now() / 1000);
         var currenttime_hex = currenttime.toString(16);   
@@ -81,7 +84,6 @@ function create_broadcast_data(message, value, feefraction) {
         var initiallength = parseFloat(messagelength) + 29;
         var initiallength_hex = pad(initiallength.toString(16),2);
          
-        var feefraction_int = parseFloat(feefraction) * 100000000;
         var feefraction_hex = pad(feefraction_int.toString(16),8);
        
         var message_hex_short = bin2hex(message);
@@ -102,6 +104,11 @@ function create_broadcast_data(message, value, feefraction) {
         
         return broadcast_tx_data;
     
+    } else {
+        
+        var error = "error";
+        return error;
+        
     }
     
 }
