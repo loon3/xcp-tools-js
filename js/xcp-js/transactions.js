@@ -69,7 +69,8 @@ function create_broadcast_data(message, value, feefraction) {
     //max 32 character broadcast for single OP_CHECKMULTISIG output
     //fee fraction must be less than 42.94967295 to be stored as a 4-byte hexadecimal
     
-    var feefraction_int = parseFloat(feefraction) * 100000000;
+    var feefraction_int = parseFloat(feefraction).toFixed(8) * 100000000;
+    feefraction_int = Math.round(feefraction_int);
     
     if (message.length <= 32 && feefraction_int <= 4294967295) {
         
