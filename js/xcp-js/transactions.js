@@ -375,34 +375,43 @@ function sendBroadcast(add_from, message, value, feefraction, msig_total, transf
         }
     
         var datachunk_unencoded = create_broadcast_data(message, value, feefraction);
-        var datachunk_encoded = xcp_rc4(utxo_key, datachunk_unencoded);
-        var address_array = addresses_from_datachunk(datachunk_encoded);
         
-        var sender_pubkeyhash = new bitcore.PublicKey(bitcore.PrivateKey.fromWIF(privkey));
+        if (datachunk_unencoded != "error") {
         
-        var scriptstring = "OP_1 33 0x"+address_array[0]+" 33 0x"+address_array[1]+" 33 0x"+sender_pubkeyhash+" OP_3 OP_CHECKMULTISIG";
-        console.log(scriptstring);
-        var data_script = new bitcore.Script(scriptstring);
+            var datachunk_encoded = xcp_rc4(utxo_key, datachunk_unencoded);
+            var address_array = addresses_from_datachunk(datachunk_encoded);
         
-        var transaction = new bitcore.Transaction();
+            var sender_pubkeyhash = new bitcore.PublicKey(bitcore.PrivateKey.fromWIF(privkey));
+        
+            var scriptstring = "OP_1 33 0x"+address_array[0]+" 33 0x"+address_array[1]+" 33 0x"+sender_pubkeyhash+" OP_3 OP_CHECKMULTISIG";
+            console.log(scriptstring);
+            var data_script = new bitcore.Script(scriptstring);
+        
+            var transaction = new bitcore.Transaction();
             
-        for (i = 0; i < total_utxo.length; i++) {
-            transaction.from(total_utxo[i]);
-        }
+            for (i = 0; i < total_utxo.length; i++) {
+                transaction.from(total_utxo[i]);
+            }
         
-        var msig_total_satoshis = parseFloat((msig_total * 100000000).toFixed(0));
+            var msig_total_satoshis = parseFloat((msig_total * 100000000).toFixed(0));
         
-        var xcpdata_msig = new bitcore.Transaction.Output({script: data_script, satoshis: msig_total_satoshis}); 
+            var xcpdata_msig = new bitcore.Transaction.Output({script: data_script, satoshis: msig_total_satoshis}); 
         
-        transaction.addOutput(xcpdata_msig);
+            transaction.addOutput(xcpdata_msig);
                   
-        if (satoshi_change > 5459) {
-            transaction.to(add_from, satoshi_change);
-        }
+            if (satoshi_change > 5459) {
+                transaction.to(add_from, satoshi_change);
+            }
         
-        transaction.sign(privkey);
+            transaction.sign(privkey);
 
-        var final_trans = transaction.serialize();
+            var final_trans = transaction.serialize();
+            
+        } else {
+            
+            var final_trans = "error";
+            
+        }
         
         console.log(final_trans);
         
