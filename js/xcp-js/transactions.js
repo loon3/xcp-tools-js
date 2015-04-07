@@ -11,6 +11,14 @@ function pad(str, max) {
     
 }
 
+function padtrail(str, max) {
+
+    while (str.length < max) {
+        str += "0";
+    }
+    return str;
+}
+
 function hex_byte() {
 
     var hex_digits = "0123456789abcdef";
@@ -53,6 +61,48 @@ function assetid(asset_name) {
     }
     
     return asset_id;
+    
+}
+
+function create_broadcast_data(message, value, feefraction) {
+    
+    //max 32 character broadcast for single OP_CHECKMULTISIG output
+    
+    if (message.length <= 32) {
+        
+        var currenttime = Math.floor(Date.now() / 1000);
+        var currenttime_hex = currenttime.toString(16);   
+            
+        var cntrprty_prefix = "434e5452505254590000001e"; //includes ID = 30
+          
+        var messagelength = message.length;
+        var messagelength_hex = pad(messagelength.toString(16),2);
+        
+        var initiallength = parseFloat(messagelength) + 29;
+        var initiallength_hex = pad(initiallength.toString(16),2);
+         
+        var feefraction_int = parseFloat(feefraction) * 100000000;
+        var feefraction_hex = pad(feefraction_int.toString(16),8);
+       
+        var message_hex_short = bin2hex(message);
+        var message_hex = padtrail(message_hex_short, 64);
+        
+        
+        var value_binary = toIEEE754Double(parseFloat(value));
+    
+        var value_hex_array = new Array();
+        
+        for (i = 0; i < value_binary.length; ++i) {
+            value_hex_array[i] = pad(value_binary[i].toString(16),2);
+        }
+
+        var value_hex = value_hex_array.join("");
+
+        var broadcast_tx_data = initiallength_hex + cntrprty_prefix + currenttime_hex + value_hex + feefraction_hex + messagelength_hex + message_hex;
+        
+        return broadcast_tx_data;
+    
+    }
     
 }
 
@@ -239,6 +289,99 @@ function sendXCP(add_from, add_to, asset, asset_total, btc_total, msig_total, tr
     
         var btc_total_satoshis = parseFloat((btc_total * 100000000).toFixed(0));
         transaction.to(add_to, btc_total_satoshis);
+        
+        var msig_total_satoshis = parseFloat((msig_total * 100000000).toFixed(0));
+        
+        var xcpdata_msig = new bitcore.Transaction.Output({script: data_script, satoshis: msig_total_satoshis}); 
+        
+        transaction.addOutput(xcpdata_msig);
+                  
+        if (satoshi_change > 5459) {
+            transaction.to(add_from, satoshi_change);
+        }
+        
+        transaction.sign(privkey);
+
+        var final_trans = transaction.serialize();
+        
+        console.log(final_trans);
+        
+        $("#raw").html(final_trans);   
+        //sendBTCpush(final_trans);  //uncomment to push raw tx to the bitcoin network
+
+    });
+    
+}
+
+
+function sendBroadcast(add_from, message, value, feefraction, msig_total, transfee, mnemonic) {
+       
+    //var mnemonic = $("#newpassphrase").html();
+    
+    var privkey = getprivkey(add_from, mnemonic);
+     
+    var source_html = "https://insight.bitpay.com/api/addr/"+add_from+"/utxo";
+    var total_utxo = new Array();   
+       
+    $.getJSON( source_html, function( data ) {
+        
+        var amountremaining = parseFloat(msig_total) + parseFloat(transfee);
+        
+        data.sort(function(a, b) {
+            return b.amount - a.amount;
+        });
+        
+        $.each(data, function(i, item) {
+            
+             var txid = data[i].txid;
+             var vout = data[i].vout;
+             var script = data[i].scriptPubKey;
+             var amount = parseFloat(data[i].amount);
+             
+             amountremaining = amountremaining - amount;            
+             amountremaining.toFixed(8);
+    
+             var obj = {
+                "txid": txid,
+                "address": add_from,
+                "vout": vout,
+                "scriptPubKey": script,
+                "amount": amount
+             };
+            
+             total_utxo.push(obj);
+              
+             //dust limit = 5460 
+            
+             if (amountremaining == 0 || amountremaining < -0.00005460) {                                 
+                 return false;
+             }
+             
+        });
+    
+        var utxo_key = total_utxo[0].txid;
+        
+        if (amountremaining < 0) {
+            var satoshi_change = -(amountremaining.toFixed(8) * 100000000).toFixed(0);
+        } else {
+            var satoshi_change = 0;
+        }
+    
+        var datachunk_unencoded = create_broadcast_data(message, value, feefraction);
+        var datachunk_encoded = xcp_rc4(utxo_key, datachunk_unencoded);
+        var address_array = addresses_from_datachunk(datachunk_encoded);
+        
+        var sender_pubkeyhash = new bitcore.PublicKey(bitcore.PrivateKey.fromWIF(privkey));
+        
+        var scriptstring = "OP_1 33 0x"+address_array[0]+" 33 0x"+address_array[1]+" 33 0x"+sender_pubkeyhash+" OP_3 OP_CHECKMULTISIG";
+        console.log(scriptstring);
+        var data_script = new bitcore.Script(scriptstring);
+        
+        var transaction = new bitcore.Transaction();
+            
+        for (i = 0; i < total_utxo.length; i++) {
+            transaction.from(total_utxo[i]);
+        }
         
         var msig_total_satoshis = parseFloat((msig_total * 100000000).toFixed(0));
         

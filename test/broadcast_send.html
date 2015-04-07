@@ -1,0 +1,76 @@
+<html>
+<head>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bitcore/bitcore.min.js"></script>
+    <script src="../js/mnemonic.js"></script>
+    <script src="../js/xcp-js/pushtx.js"></script>
+    <script src="../js/xcp-js/transactions.js"></script>
+    <script src="../js/xcp-js/rc4.js"></script>
+    <script src="../js/xcp-js/convert-type.js"></script>
+    <script src="../js/xcp-js/decode.js"></script>
+
+    
+<script>
+
+hex_byte();    
+    
+var bitcore = require('bitcore');
+   
+$( document ).ready(function() {
+          
+    $("#gettransbutton").click(function(){
+    
+        var mnemonic = $("#mnemonic").val();
+        
+        var add_from = $("#add_from").val();  // sending address
+        var message = $("#message").val();  // receiving address
+        
+        var messagevalue = $("#messagevalue").val();
+        var feefraction = $("#feefraction").val();
+        
+        var btc_total = 0.0000547;  //total btc to receiving address
+        var msig_total = 0.000078;  //total btc to multisig output (returned to sender)
+
+        var transfee = 0.0001;  //bitcoin tx fee
+        
+        
+        sendBroadcast(add_from, message, messagevalue, feefraction, msig_total, transfee, mnemonic);
+         
+    });
+
+});
+    
+
+</script>
+</head>
+<body>
+
+    
+    
+    <h1 style="margin-top: 50px;">Create Broadcast - BTC Raw Transaction</h1>
+    <div>Use https://blockchain.info/pushtx to broadcast a raw transaction to the Bitcoin network</div>
+    <div style="margin-top: 30px;">Mnemonic Passphrase (12 words)</div>
+    <input type="text" id="mnemonic" value="" required>
+
+    <div style="margin-top: 20px;">Sending Address</div>
+    <input type="text" id="add_from" value="" required>
+
+    <div style="margin-top: 20px;">Message (32 character max)</div>
+    <input type="text" id="message" value="" maxlength="32" required>
+
+    <div style="margin-top: 20px;">Value</div>
+    <input type="text" id="messagevalue" value="0" required>
+
+    <div style="margin-top: 20px;">Fee Fraction</div>
+    <input type="text" id="feefraction" value="0" required>
+    
+    <div style="margin-top: 30px;">
+    <input type="button" id="gettransbutton" value="Get BTC Raw Transaction Data">
+    </div>
+    
+    <div style="margin-top: 30px; margin-bottom: 100px;" id="raw"></div>
+    
+    
+        
+</body>
+</html>

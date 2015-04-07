@@ -14,41 +14,16 @@
 var bitcore = require('bitcore');
    
 $( document ).ready(function() {
-          
+    
+//    value_binary = value_binary.replace(/\s+/g, '');
+//    console.log(value_binary.substring(0,4));
+//    console.log(parseInt(parseInt(value_binary.substring(0,4)),16));
+    
+    
     $("#getdatabutton").click(function(){
-          
-	function removeA(arr) {
-    		var what, a = arguments, L = a.length, ax;
-    		while (L > 1 && arr.length) {
-        		what = a[--L];
-        		while ((ax= arr.indexOf(what)) !== -1) {
-        		    arr.splice(ax, 1);
-        		}
-    		}
-    		return arr;
-	}
+         
 
-
-	function conv_floating_pt(value_array) {
-	    	var buffer = new ArrayBuffer(8);
-		var bytes = new Uint8Array(buffer);
-		var doubles = new Float64Array(buffer); 
-
-		bytes[7] = "0x" + value_array[0];
-		bytes[6] = "0x" + value_array[1];
-		bytes[5] = "0x" + value_array[2];
-		bytes[4] = "0x" + value_array[3];
-		bytes[3] = "0x" + value_array[4];
-		bytes[2] = "0x" + value_array[5];
-		bytes[1] = "0x" + value_array[6];
-		bytes[0] = "0x" + value_array[7];
-
-		var value_final = doubles[0];
-
-		return value_final;
-	}
-
-	var tx_id = $("#tx_id").val();
+	    var tx_id = $("#tx_id").val();
         
         
         get_xcp_encoded(tx_id, function(utxo_hash, data_chunk){
@@ -98,6 +73,13 @@ $( document ).ready(function() {
 	    
 	    console.log(message);	
 	    console.log(message_length);	
+            
+    console.log(data_chunk);        
+    var message = "XCPELECTION 1";
+    var value = 101;
+    var feefraction = 0;
+    
+    console.log(create_broadcast_data(message, value, feefraction));
     
         });
     });
@@ -108,23 +90,15 @@ $( document ).ready(function() {
 </script>
 </head>
 <body>
-    <h1 style="margin-top: 20px;">Extract XCP Broadcast Transaction Data (multi-sig encoded only)</h1>
+    <h1 style="margin-top: 20px;">Extract XCP Broadcast Transaction Data (OP_CHECKMULTISIG encoded only)</h1>
     <div style="margin-top: 50px;">Bitcoin Tx Hash</div>
-    <input type="text" id="tx_id" label="Tx Hash" value="1685ebe0931f90a776de9868c516c86cac2f9fb196a5cc4de7ce497fa5a53ca2" required>
+    <input type="text" id="tx_id" label="Tx Hash" value="d358e29c19766e28dbb93dac3287bb50c94d6ebeba98602ca3a5067db1fea591" required>
 
     <div style="margin-top: 20px;">
     <input type="button" id="getdatabutton" value="Get XCP Data">
     
     
-    
-    <!--
-    <div style="margin-top: 50px;">Hashed Data: <span id="arc"></span></div>
-    
-    <div style="margin-top: 20px;">Asset ID: <span id="assetid"></span></div>
-        
-    <div style="margin-top: 20px;">Asset Amount: <span id="assetamt"></span></div>
-        
-    -->    
+ 
         
     <div style="margin-top: 50px;">Hashed Data: <span id="arc"></span></div>
     
