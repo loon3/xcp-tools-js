@@ -71,7 +71,7 @@ function create_broadcast_data(message, value, feefraction) {
     
     var feefraction_int = parseFloat(feefraction) * 100000000;
     
-    if (message.length <= 32 && feefraction <= 4294967295) {
+    if (message.length <= 32 && feefraction_int <= 4294967295) {
         
         var currenttime = Math.floor(Date.now() / 1000);
         var currenttime_hex = currenttime.toString(16);   
