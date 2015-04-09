@@ -83,6 +83,71 @@ $( document ).ready(function() {
     
         });
     });
+    
+    
+    $("#parsedatabutton").click(function(){
+         
+
+	    var data_chunk = $("#xcp_data").val();
+        
+        
+        
+
+            var data = data_chunk.substring(60, 26);
+
+	    var feefraction_hex = data.slice(-10);
+	    var feefraction_hex = feefraction_hex.slice(0,-2);
+	    var feefraction = parseInt(feefraction_hex,16) / 100000000;	
+
+
+	    var value_hex = data.substring(8);	
+            var value_hex = value_hex.slice(0, -10);	
+	    var value_array = value_hex.match(/.{2}/g);
+	    
+	    var value_final = conv_floating_pt(value_array);
+
+ 	    var total_length_hex = data_chunk.substring(0,2);
+	    console.log(parseInt(total_length_hex, 16));
+
+            var message_length_hex = data.slice(-2);
+	    console.log(parseInt(message_length_hex, 16));
+
+	
+            var message_hex = data_chunk.substring(124, 60);
+            var timestamp_hex = data.substring(0,8);
+            
+
+	    var message_hex_array = message_hex.match(/.{2}/g);	
+	    removeA(message_hex_array, '00');	
+	    var message_length = message_hex_array.length;	
+
+
+
+            var message = hex2bin(message_hex);
+
+	    var timestamp = parseInt(timestamp_hex, 16);
+            
+            
+            $("#assetid").html(data);
+            $("#timestamp").html(timestamp);
+	    $("#value").html(value_final);
+	    $("#feefraction").html(feefraction);
+            $("#broadcasttext").html(message);
+
+	    
+	    console.log(message);	
+	    console.log(message_length);	
+            
+    console.log(data_chunk);        
+    var message = "XCPELECTION 1";
+    var value = 101;
+    var feefraction = 0;
+    
+    console.log(create_broadcast_data(message, value, feefraction));
+    
+      
+    });
+
 
 });
     
@@ -97,7 +162,11 @@ $( document ).ready(function() {
     <div style="margin-top: 20px;">
     <input type="button" id="getdatabutton" value="Get XCP Data">
     
-    
+    <div style="margin-top: 50px;">Unencoded XCP Broadcast Transaction Data</div>
+    <input type="text" id="xcp_data" label="Data" value="" required>
+
+    <div style="margin-top: 20px;">
+    <input type="button" id="parsedatabutton" value="Get Parsed Data">
  
         
     <div style="margin-top: 50px;">Hashed Data: <span id="arc"></span></div>
