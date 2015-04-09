@@ -15,7 +15,7 @@ var bitcore = require('bitcore');
    
 $( document ).ready(function() {
           
-    $("#getdatabutton").click(function(){
+    $("#getdatabutton_msig").click(function(){
         
         var tx_id = $("#tx_id").val();
         
@@ -31,23 +31,44 @@ $( document ).ready(function() {
         });
         
         
-
     });
 
+    $("#getdatabutton_opreturn").click(function(){
+        
+        var tx_id = $("#opreturndata").val();
+        
+	        
+	get_xcp_encoded_opreturn(tx_id, function(utxo_hash, data_chunk){
+	    $("#arc").html(data_chunk);
+            var asset = data_chunk.substring(42, 26);
+            var amount = data_chunk.substring(58, 42);
+            var asset_dec = parseInt(asset, 16);
+            var amount_dec = parseInt(amount, 16) / 100000000;
+            $("#assetid").html(asset_dec);
+            $("#assetamt").html(amount_dec);
+    
+        });
+        
+        
+    });
+	
 });
     
-
 </script>
 </head>
 <body>
-    <h1 style="margin-top: 20px;">Extract XCP Asset Send Transaction Data (multi-sig encoded only)</h1>
-    <div style="margin-top: 50px;">Bitcoin Tx Hash</div>
+    <h1 style="margin-top: 20px;">Extract XCP Asset Send Transaction Data</h1>
+    <div style="margin-top: 50px;">Bitcoin Tx Hash - OP_CHECKMULTISIG</div>
     <input type="text" id="tx_id" label="Tx Hash" required>
 
     <div style="margin-top: 20px;">
-    <input type="button" id="getdatabutton" value="Get XCP Data">
+    <input type="button" id="getdatabutton_msig" value="Get XCP Data">
     
-    
+     <div style="margin-top: 50px;">Bitcoin Tx Hash - OP_RETURN</div>
+    <input type="text" id="opreturndata" label="xcpdata" required>
+
+    <div style="margin-top: 20px;">
+    <input type="button" id="getdatabutton_opreturn" value="Get XCP Data">   
     
 
     <div style="margin-top: 50px;">Hashed Data: <span id="arc"></span></div>
