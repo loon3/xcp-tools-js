@@ -130,6 +130,22 @@ function create_xcp_send_data(asset_name, amount) {
     
 }
 
+function create_xcp_send_data_opreturn(asset_name, amount) {
+    
+    var prefix = "434e54525052545900000000"; //CNTRPRTY
+    //var trailing_zeros = "000000000000000000000000000000000000000000000000000000000000000000";
+    var asset_id = assetid(asset_name); 
+    
+    var asset_id_hex = pad(asset_id.toString(16), 16);
+    var amount_hex = pad((amount*100000000).toString(16), 16)
+                               
+    var data = prefix + asset_id_hex + amount_hex; 
+    
+    return data;
+    
+}
+
+
 function xcp_rc4(key, datachunk) {
     
     return bin2hex(rc4(hex2bin(key), hex2bin(datachunk)));
@@ -311,6 +327,111 @@ function sendXCP(add_from, add_to, asset, asset_total, btc_total, msig_total, tr
         transaction.sign(privkey);
 
         var final_trans = transaction.serialize();
+        
+        console.log(final_trans);
+        
+        $("#raw").html(final_trans);   
+        //sendBTCpush(final_trans);  //uncomment to push raw tx to the bitcoin network
+
+    });
+    
+}
+
+
+function sendXCP_opreturn(add_from, add_to, asset, asset_total, btc_total, transfee, mnemonic) {
+       
+    //var mnemonic = $("#newpassphrase").html();
+    
+    var privkey = getprivkey(add_from, mnemonic);
+     
+    var source_html = "https://insight.bitpay.com/api/addr/"+add_from+"/utxo";
+    var total_utxo = new Array();   
+       
+    $.getJSON( source_html, function( data ) {
+        
+        var amountremaining = (parseFloat(btc_total) + parseFloat(transfee));
+        
+        console.log(amountremaining);
+        
+        data.sort(function(a, b) {
+            return b.amount - a.amount;
+        });
+        
+        $.each(data, function(i, item) {
+            
+             var txid = data[i].txid;
+             var vout = data[i].vout;
+             var script = data[i].scriptPubKey;
+             var amount = parseFloat(data[i].amount);
+             
+             amountremaining = amountremaining - amount;            
+             amountremaining.toFixed(8);
+    
+             var obj = {
+                "txid": txid,
+                "address": add_from,
+                "vout": vout,
+                "scriptPubKey": script,
+                "amount": amount
+             };
+            
+             total_utxo.push(obj);
+              
+             //dust limit = 5460 
+            
+             if (amountremaining == 0 || amountremaining < -0.00005460) {                                 
+                 return false;
+             }
+             
+        });
+    
+        var utxo_key = total_utxo[0].txid;
+        
+        if (amountremaining < 0) {
+            var satoshi_change = -(amountremaining.toFixed(8) * 100000000).toFixed(0);
+        } else {
+            var satoshi_change = 0;
+        }
+    
+        var datachunk_unencoded = create_xcp_send_data_opreturn(asset, asset_total);
+        var datachunk_encoded = xcp_rc4(utxo_key, datachunk_unencoded);
+        
+        var sender_pubkeyhash = new bitcore.PublicKey(bitcore.PrivateKey.fromWIF(privkey));
+        
+        var scriptstring = "OP_RETURN 28 0x"+datachunk_encoded;
+        var data_script = new bitcore.Script(scriptstring);
+        
+        var transaction = new bitcore.Transaction();
+            
+        for (i = 0; i < total_utxo.length; i++) {
+            transaction.from(total_utxo[i]);
+            
+            
+        }
+        
+        console.log(total_utxo);
+    
+        var btc_total_satoshis = parseFloat((btc_total * 100000000).toFixed(0));
+        
+        console.log(btc_total_satoshis);
+        
+        transaction.to(add_to, btc_total_satoshis);
+        
+        var xcpdata_msig = new bitcore.Transaction.Output({script: data_script, satoshis: 0}); 
+       
+        transaction.addOutput(xcpdata_msig);
+        
+        console.log(satoshi_change);
+        
+        if (satoshi_change > 5459) {
+            transaction.change(add_from);
+        }
+        
+        
+        
+        transaction.sign(privkey);
+
+        var final_trans = transaction.uncheckedSerialize();
         
         console.log(final_trans);
         

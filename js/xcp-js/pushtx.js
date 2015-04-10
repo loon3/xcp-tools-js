@@ -25,8 +25,3 @@ function sendBTCpush(hextx) {
     }
 }
 
-
-       
-
-
-    
