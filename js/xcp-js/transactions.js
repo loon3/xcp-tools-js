@@ -331,7 +331,7 @@ function sendXCP(add_from, add_to, asset, asset_total, btc_total, msig_total, tr
         console.log(final_trans);
         
         $("#raw").html(final_trans);   
-        //sendBTCpush(final_trans);  //uncomment to push raw tx to the bitcoin network
+        //sendBTCpush(final_trans);  //uncomment to push raw tx to the bitcoin network via blockchain.info
 
     });
     
@@ -436,7 +436,7 @@ function sendXCP_opreturn(add_from, add_to, asset, asset_total, btc_total, trans
         console.log(final_trans);
         
         $("#raw").html(final_trans);   
-        //sendBTCpush(final_trans);  //uncomment to push raw tx to the bitcoin network
+        //sendBTCpush_chainso(final_trans);  //uncomment to push raw tx to the bitcoin network via chain.so (note: blockchain.info does not accept OP_RETURN txs)
 
     });
     
