@@ -36,6 +36,39 @@ function hex_byte() {
    
 }
 
+function assetname(assetid) {
+
+    if(assetid != 1){
+    
+        var b26_digits = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+        var letter_array = b26_digits.split("");
+        var asset_name = "";
+        var div;
+        var rem;
+        
+        while (assetid > 0) { 
+            
+            div = Math.floor(assetid/26);
+            rem = assetid % 26;
+            
+            assetid = div;
+            
+            asset_name = asset_name + letter_array[rem];
+            
+        }    
+        
+        var final_name = asset_name.split("").reverse().join("");
+    
+    } else {
+        
+        var final_name = "XCP";
+        
+    }
+    
+    return final_name;
+    
+}
+
 function assetid(asset_name) {
     
     asset_name.toUpperCase();

@@ -14,6 +14,8 @@
 var bitcore = require('bitcore');
    
 $( document ).ready(function() {
+    
+//    console.log(assetname(322527));
           
     $("#getdatabutton_msig").click(function(){
         
@@ -25,7 +27,7 @@ $( document ).ready(function() {
             var amount = data_chunk.substring(58, 42);
             var asset_dec = parseInt(asset, 16);
             var amount_dec = parseInt(amount, 16) / 100000000;
-            $("#assetid").html(asset_dec);
+            $("#assetid").html(assetname(asset_dec));
             $("#assetamt").html(amount_dec);
     
         });
@@ -44,7 +46,7 @@ $( document ).ready(function() {
             var amount = data_chunk.substring(58, 42);
             var asset_dec = parseInt(asset, 16);
             var amount_dec = parseInt(amount, 16) / 100000000;
-            $("#assetid").html(asset_dec);
+            $("#assetid").html(assetname(asset_dec));
             $("#assetamt").html(amount_dec);
     
         });
