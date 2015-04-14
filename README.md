@@ -1,8 +1,8 @@
 # XCP Tools JS
 
-Javascript tools for working with Counterparty (http://counterparty.io) data in Bitcoin transactions.
+Javascript library for encoding and decoding Counterparty (http://counterparty.io) data in Bitcoin transactions.
 
-Functions include encoding and decoding of the following transaction types:
+Includes the following transaction types:
 - Asset Send (OP_CHECKMULTISIG and OP_RETURN)
 - Broadcast (OP_CHECKMULTISIG)
 
