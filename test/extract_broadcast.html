@@ -49,7 +49,7 @@ $( document ).ready(function() {
 	    console.log(parseInt(message_length_hex, 16));
 
 	
-            var message_hex = data_chunk.substring(124, 60);
+            var message_hex = data_chunk.substring(60);
             var timestamp_hex = data.substring(0,8);
             
 
@@ -128,7 +128,7 @@ $( document ).ready(function() {
 	    var timestamp = parseInt(timestamp_hex, 16);
             
             
-            $("#assetid").html(data);
+          
             $("#timestamp").html(timestamp);
 	    $("#value").html(value_final);
 	    $("#feefraction").html(feefraction);
@@ -171,8 +171,6 @@ $( document ).ready(function() {
         
     <div style="margin-top: 50px;">Hashed Data: <span id="arc"></span></div>
     
-    <div style="margin-top: 20px;">Broadcast Data: <span id="assetid"></span></div>
-        
     <div style="margin-top: 20px;">Timestamp: <span id="timestamp"></span></div>
 
     <div style="margin-top: 20px;">Value: <span id="value"></span></div>

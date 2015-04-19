@@ -97,6 +97,7 @@ function assetid(asset_name) {
     
 }
 
+
 function create_broadcast_data(message, value, feefraction) {
     
     //max 32 character broadcast for single OP_CHECKMULTISIG output
@@ -146,6 +147,7 @@ function create_broadcast_data(message, value, feefraction) {
     }
     
 }
+
 
 
 function create_xcp_send_data(asset_name, amount) {
@@ -580,28 +582,241 @@ function sendBroadcast(add_from, message, value, feefraction, msig_total, transf
 
 
 
-// Code below may result in data addresses in the wrong order
+function create_new_assetid() {
+         
+        var assetid = "A11";
+          
+        for (var i = 1; i < 19; i++) {
+            assetid += randomIntFromInterval(0,9);
+        };
+        
+        return assetid;
+    
+}
 
-//        var xcpdatakeys = [
-//            new bitcore.PublicKey(bitcore.PrivateKey.fromWIF(privkey)),
-//            new bitcore.PublicKey(address_array[0]),
-//            new bitcore.PublicKey(address_array[1])
-//        ];
+function is_asset_unique(assetid, quantity, divisible, description, callback){
+    
+    var source_html = "https://counterpartychain.io/api/asset/"+assetid;
+    
+    $.getJSON( source_html, function( data ) {
+        
+        console.log(data.success);
+        
+        if(data.success == 0) { //asset is unique
+            
+            callback(assetid);
+            
+        } else { //asset is not unique
+            
+            //setTimeout(create_asset_unique(quantity, divisible, description, function(){}), 2000);
+            
+            callback("error");
+            
+        }
+        
+    });
+    
+}
 
-//        var xcpdata_script = new bitcore.Script.buildMultisigOut(xcpdatakeys, 1);
+
+function create_asset_unique(assetid_new, quantity, divisible, description, callback){
+    
+    if (assetid_new == "A") {
+    
+        var newasset = create_new_assetid();
         
-//        var xcpdata_check = xcpdata_script.toString();
-//        
-//        if(xcpdata_check.substring(10, 76) != address_array[0]) {
-//            var xcpdatakeys = [
-//                new bitcore.PublicKey(bitcore.PrivateKey.fromWIF(privkey)),
-//                new bitcore.PublicKey(address_array[1]),
-//                new bitcore.PublicKey(address_array[0])
-//            ];
-//            var xcpdata_script = new bitcore.Script.buildMultisigOut(xcpdatakeys, 1);
-//        }
+    } else {
         
-//        var xcpdata_check = xcpdata_script.toString();
-//        console.log(xcpdata_check);
+        var newasset = assetid_new;
         
-//        var xcpdata_msig = new bitcore.Transaction.Output({script: xcpdata_script, satoshis: msig_total_satoshis});  
+    }
+    
+    is_asset_unique(newasset, quantity, divisible, description, function(assetid_unique){
+              
+        if (assetid_unique != "error") {
+            
+            console.log("Unique Asset ID: "+assetid_unique);
+
+            if (assetid_unique.charAt(0) == "A") {
+            
+                assetid_num = parseInt(assetid_unique.substring(1));
+                
+            } else {
+                
+                assetid_num = assetid(assetid_unique);
+                
+            }
+
+            //var issuance_data = create_issuance_data(assetid_num, 1000, true, "testing 1-2-3");
+
+            var issuance_data = create_issuance_data(assetid_num, quantity, divisible, description);
+
+            console.log(issuance_data);
+            console.log(issuance_data.length);
+
+            callback(issuance_data);
+            
+        } else {
+            
+            callback("error");
+            
+        }
+        
+    });
+
+}
+
+
+
+
+function create_issuance_data(assetid, quantity, divisible, description) {
+    
+    //max 22 character description for single OP_CHECKMULTISIG output
+    //divisible asset quantity must be less than 184467440737.09551615 and non-divisible less than 18446744073709551615 to be stored as an 8-byte hexadecimal
+    
+    if (divisible == true || divisible == "true") {
+        var quantity_int = parseFloat(quantity).toFixed(8) * 100000000;
+        var divisible_hex = "01000000000000000000";
+    } else {
+        var quantity_int = parseFloat(quantity); 
+        var divisible_hex = "00000000000000000000";
+    }
+    
+    quantity_int = Math.round(quantity_int);
+    
+    
+    if (description.length <= 22 && quantity_int <= 18446744073709551615) {
+            
+        var cntrprty_prefix = "434e545250525459"; 
+        var trans_id = "00000014";
+          
+        var descriptionlength = description.length;
+        var descriptionlength_hex = pad(descriptionlength.toString(16),2);
+        
+        var initiallength = parseFloat(descriptionlength) + 39;
+        var initiallength_hex = pad(initiallength.toString(16),2);
+         
+        var assetid_hex = pad(assetid.toString(16),16);
+        
+        var quantity_hex = pad(quantity_int.toString(16),16);
+       
+        var description_hex_short = bin2hex(description);
+        var description_hex = padtrail(description_hex_short, 44);
+
+        var issuance_tx_data = initiallength_hex + cntrprty_prefix + trans_id + assetid_hex + quantity_hex + divisible_hex + descriptionlength_hex + description_hex;
+        
+        return issuance_tx_data;
+    
+    } else {
+        
+        var error = "error";
+        return error;
+        
+    }
+    
+}
+
+
+
+function createIssuance(add_from, assetid, quantity, divisible, description, msig_total, transfee, mnemonic) {
+       
+    //var mnemonic = $("#newpassphrase").html();
+    
+    var privkey = getprivkey(add_from, mnemonic);
+     
+    var source_html = "https://insight.bitpay.com/api/addr/"+add_from+"/utxo";
+    var total_utxo = new Array();   
+       
+    $.getJSON( source_html, function( data ) {
+        
+        var amountremaining = parseFloat(msig_total) + parseFloat(transfee);
+        
+        data.sort(function(a, b) {
+            return b.amount - a.amount;
+        });
+        
+        $.each(data, function(i, item) {
+            
+             var txid = data[i].txid;
+             var vout = data[i].vout;
+             var script = data[i].scriptPubKey;
+             var amount = parseFloat(data[i].amount);
+             
+             amountremaining = amountremaining - amount;            
+             amountremaining.toFixed(8);
+    
+             var obj = {
+                "txid": txid,
+                "address": add_from,
+                "vout": vout,
+                "scriptPubKey": script,
+                "amount": amount
+             };
+            
+             total_utxo.push(obj);
+              
+             //dust limit = 5460 
+            
+             if (amountremaining == 0 || amountremaining < -0.00005460) {                                 
+                 return false;
+             }
+             
+        });
+    
+        var utxo_key = total_utxo[0].txid;
+        
+        if (amountremaining < 0) {
+            var satoshi_change = -(amountremaining.toFixed(8) * 100000000).toFixed(0);
+        } else {
+            var satoshi_change = 0;
+        }
+    
+        create_asset_unique(assetid, quantity, divisible, description, function(datachunk_unencoded){
+        
+            if (datachunk_unencoded != "error") {
+        
+                var datachunk_encoded = xcp_rc4(utxo_key, datachunk_unencoded);
+                var address_array = addresses_from_datachunk(datachunk_encoded);
+
+                var sender_pubkeyhash = new bitcore.PublicKey(bitcore.PrivateKey.fromWIF(privkey));
+
+                var scriptstring = "OP_1 33 0x"+address_array[0]+" 33 0x"+address_array[1]+" 33 0x"+sender_pubkeyhash+" OP_3 OP_CHECKMULTISIG";
+                console.log(scriptstring);
+                var data_script = new bitcore.Script(scriptstring);
+
+                var transaction = new bitcore.Transaction();
+
+                for (i = 0; i < total_utxo.length; i++) {
+                    transaction.from(total_utxo[i]);
+                }
+
+                var msig_total_satoshis = parseFloat((msig_total * 100000000).toFixed(0));
+
+                var xcpdata_msig = new bitcore.Transaction.Output({script: data_script, satoshis: msig_total_satoshis}); 
+
+                transaction.addOutput(xcpdata_msig);
+
+                if (satoshi_change > 5459) {
+                    transaction.to(add_from, satoshi_change);
+                }
+
+                transaction.sign(privkey);
+
+                var final_trans = transaction.serialize();
+
+            } else {
+
+                var final_trans = "error";
+
+            }
+
+            console.log(final_trans);
+        
+            $("#raw").html(final_trans);   
+        //sendBTCpush(final_trans);  //uncomment to push raw tx to the bitcoin network
+            
+        });
+
+    });
+    
+}

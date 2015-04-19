@@ -1,0 +1,93 @@
+<html>
+<head>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bitcore/bitcore.min.js"></script>
+    <script src="../js/mnemonic.js"></script>
+    <script src="../js/xcp-js/pushtx.js"></script>
+    <script src="../js/xcp-js/transactions.js"></script>
+    <script src="../js/xcp-js/rc4.js"></script>
+    <script src="../js/xcp-js/convert-type.js"></script>
+    <script src="../js/xcp-js/decode.js"></script>
+    
+<script>
+ 
+var bitcore = require('bitcore');
+   
+$( document ).ready(function() {
+    
+    
+    $("#getdatabutton").click(function(){
+         
+
+	    var tx_id = $("#tx_id").val();
+        
+        
+        get_xcp_encoded(tx_id, function(utxo_hash, data_chunk){
+            
+            $("#arc").html(data_chunk);
+            
+            var assetid_hex = data_chunk.substring(26,42);
+            var assetid_dec = parseInt(assetid_hex,16);
+            
+            
+            if (assetid_dec >= (Math.pow(26, 12) + 1)){
+                var assetid = "A"+assetid_dec;
+            } else {
+                var assetid = assetname(assetid_dec);
+            }
+            
+            
+            var qty_hex = data_chunk.substring(42, 58);
+            var qty = parseInt(qty_hex,16);
+            
+            var div_hex = data_chunk.substring(58, 60);
+            if (div_hex == "00") {
+                var divisible = "false";
+            } else {
+                var divisible = "true";
+            }
+            
+            var desc_hex = data_chunk.substring(80);
+            var desc = hex2bin(desc_hex);
+                
+            $("#assetid").html(assetid);
+            $("#qty").html(qty);
+	        $("#divisible").html(divisible);
+	        $("#desc").html(desc);    
+                
+
+        });
+    });
+    
+    
+   
+
+
+});
+    
+
+</script>
+</head>
+<body>
+    <h1 style="margin-top: 20px;">Extract XCP Issuance Transaction Data (OP_CHECKMULTISIG encoded only)</h1>
+    <div style="margin-top: 50px;">Bitcoin Tx Hash</div>
+    <input type="text" id="tx_id" label="Tx Hash" value="fd9bbc15b051f74541f5f53dfe560315fc14ad23bd152e8b2197b0b81be0b661" required>
+
+    <div style="margin-top: 20px;">
+    <input type="button" id="getdatabutton" value="Get XCP Data">
+    
+ 
+        
+    <div style="margin-top: 50px;">Hashed Data: <span id="arc"></span></div>
+    
+    <div style="margin-top: 20px;">Asset ID: <span id="assetid"></span></div>
+        
+    <div style="margin-top: 20px;">Quantity: <span id="qty"></span></div>
+
+    <div style="margin-top: 20px;">Divisible: <span id="divisible"></span></div>
+
+    <div style="margin-top: 20px;">Description: <span id="desc"></span></div>
+ 
+
+</body>
+</html>
