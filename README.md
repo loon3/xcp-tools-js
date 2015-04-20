@@ -5,6 +5,7 @@ Javascript library for encoding and decoding Counterparty (http://counterparty.i
 Includes the following transaction types:
 - Asset Send (OP_CHECKMULTISIG and OP_RETURN)
 - Broadcast (OP_CHECKMULTISIG)
+- Asset Issuance (OP_CHECKMULTISIG)
 
 XCP Tools JS utilizes jQuery (http://jquery.org), Bitcore (http://bitcore.io) and Mnemonic.js (http://github.com/ggozad/mnemonic.js) libraries as well as APIs from Insight (http://insight.bitpay.com) and Blockchain.info (http://blockchain.info).
 
