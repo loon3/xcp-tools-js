@@ -30,7 +30,7 @@ https://counterpartychain.io/transaction/fd9bbc15b051f74541f5f53dfe560315fc14ad2
     74686973206973207468652062657374207465737420 = Description = this is the best test  (hex to text)
                                                              
                                                                                                                 
--second multisig output-
+    -second multisig output-
 
     1b = 27 (hex to dec)
     434e545250525459 = CNTRPRTY (hex to text)
@@ -40,7 +40,7 @@ https://counterpartychain.io/transaction/fd9bbc15b051f74541f5f53dfe560315fc14ad2
 
 https://counterpartychain.io/transaction/4d6f504c6e0693cd79b2f252520b7e8cce0618a580a71fbb62b663a9c61ae1b9
 
--single multisig output-
+    -single multisig output-
 
     35 = Encoded Data Length in Bytes (minus this index) = 53 (hex to dec)
     434e545250525459 = CNTRPRTY (hex to text)
