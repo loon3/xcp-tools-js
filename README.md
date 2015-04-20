@@ -7,7 +7,7 @@ Includes the following transaction types:
 - Broadcast (OP_CHECKMULTISIG)
 - Asset Issuance (OP_CHECKMULTISIG)
 
-XCP Tools JS utilizes jQuery (http://jquery.org), Bitcore (http://bitcore.io) and Mnemonic.js (http://github.com/ggozad/mnemonic.js) libraries as well as APIs from Insight (http://insight.bitpay.com) and Blockchain.info (http://blockchain.info).
+XCP Tools JS utilizes jQuery (http://jquery.org), Bitcore (http://bitcore.io) and Mnemonic.js (http://github.com/ggozad/mnemonic.js) libraries as well as APIs from Insight (http://insight.bitpay.com), Blockchain.info (http://blockchain.info) and Counterpartychain (https://counterpartychain.io).
 
 Currently under development, use at your own risk!
 
