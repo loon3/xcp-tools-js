@@ -645,16 +645,32 @@ function create_asset_unique(assetid_new, quantity, divisible, description, call
                 
                 assetid_num = assetid(assetid_unique);
                 
+                console.log(assetid_num);
+                
+                var assetnametest = assetname(assetid_num);
+                
+                console.log("Confirm Asset Name: "+assetnametest);
+                
             }
 
-            //var issuance_data = create_issuance_data(assetid_num, 1000, true, "testing 1-2-3");
+            
+            if (assetid_num <= 9007199254740992) { 
+                      
+                //var issuance_data = create_issuance_data(assetid_num, 1000, true, "testing 1-2-3");
 
-            var issuance_data = create_issuance_data(assetid_num, quantity, divisible, description);
+                var issuance_data = create_issuance_data(assetid_num, quantity, divisible, description);
 
-            console.log(issuance_data);
-            console.log(issuance_data.length);
+                console.log(issuance_data);
+                console.log(issuance_data.length);
 
-            callback(issuance_data);
+                callback(issuance_data);
+                
+            } else {
+                
+                console.log("Asset ID is too large"); 
+                callback("error");
+                
+            }
             
         } else {
             
@@ -813,7 +829,7 @@ function createIssuance(add_from, assetid, quantity, divisible, description, msi
             console.log(final_trans);
         
             $("#raw").html(final_trans);   
-        //sendBTCpush(final_trans);  //uncomment to push raw tx to the bitcoin network
+            //sendBTCpush_chainso(final_trans);  //uncomment to push raw tx to the bitcoin network
             
         });
 
