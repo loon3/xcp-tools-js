@@ -37,8 +37,36 @@ function hex_byte() {
 }
 
 function assetname(assetid) {
-
-    if(assetid != 1){
+//
+//    if(assetid != 1){
+//    
+//        var b26_digits = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+//        var letter_array = b26_digits.split("");
+//        var asset_name = "";
+//        var div;
+//        var rem;
+//        
+//        while (assetid > 0) { 
+//            
+//            div = Math.floor(assetid/26);
+//            rem = assetid % 26;
+//            
+//            assetid = div;
+//            
+//            asset_name = asset_name + letter_array[rem];
+//            
+//        }    
+//        
+//        var final_name = asset_name.split("").reverse().join("");
+//    
+//    } else {
+//        
+//        var final_name = "XCP";
+//        
+//    }
+    
+    
+     if(assetid != 1){
     
         var b26_digits = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
         var letter_array = b26_digits.split("");
@@ -46,13 +74,25 @@ function assetname(assetid) {
         var div;
         var rem;
         
+        var rem_bigint;
+        var div_bigint;
+        var div_bigint_parsed;
+        var rem_bigint_parsed;
+        
+        console.log("Asset ID: " + assetid);
+        
         while (assetid > 0) { 
-            
-            div = Math.floor(assetid/26);
-            rem = assetid % 26;
-            
+
+            var assetid_bigint = BigIntegerSM(assetid);
+
+            div_bigint = BigIntegerSM(assetid_bigint).divide(26);
+            div = Math.floor(BigIntegerSM.toJSValue(div_bigint)); 
+
+            rem_bigint = BigIntegerSM(assetid_bigint).remainder(26);
+            rem = BigIntegerSM.toJSValue(rem_bigint);
+
             assetid = div;
-            
+
             asset_name = asset_name + letter_array[rem];
             
         }    
@@ -69,6 +109,34 @@ function assetname(assetid) {
     
 }
 
+//function assetid(asset_name) {
+//    
+//    asset_name.toUpperCase();
+//
+//    if(asset_name != "XCP"){
+//    
+//        var b26_digits = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+//        var name_array = asset_name.split("");
+//    
+//        var n = 0;
+//    
+//        for (i = 0; i < name_array.length; i++) { 
+//            n *= 26;
+//            n += b26_digits.indexOf(name_array[i]);
+//        }    
+//     
+//        var asset_id = n;
+//    
+//    } else {
+//        
+//        var asset_id = 1;
+//        
+//    }
+//    
+//    return asset_id;
+//    
+//}
+
 function assetid(asset_name) {
     
     asset_name.toUpperCase();
@@ -78,22 +146,39 @@ function assetid(asset_name) {
         var b26_digits = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
         var name_array = asset_name.split("");
     
-        var n = 0;
+        //var n = 0;
+        var n_bigint = BigIntegerSM(0);
     
         for (i = 0; i < name_array.length; i++) { 
-            n *= 26;
-            n += b26_digits.indexOf(name_array[i]);
+            
+            //n *= 26;
+            //n += b26_digits.indexOf(name_array[i]);
+            
+            n_bigint = BigIntegerSM(n_bigint).multiply(26);
+            n_bigint = BigIntegerSM(n_bigint).add(b26_digits.indexOf(name_array[i]));
+                    
         }    
      
-        var asset_id = n;
+        //var asset_id = n;
+        var asset_id = n_bigint.toString(16);
+        
+        //var asset_id = BigIntegerSM.toJSValue(n_bigint);
     
     } else {
         
-        var asset_id = 1;
+        var asset_id = (1).toString(16);
+        
+        //var asset_id = BigIntegerSM.toJSValue(1);
         
     }
     
-    return asset_id;
+    var assetiddec = hexToDec(asset_id);
+    
+    //return asset_id;
+    console.log(asset_id);
+    console.log(assetiddec);
+    
+    return assetiddec;
     
 }
 
@@ -589,6 +674,16 @@ function create_new_assetid() {
         for (var i = 1; i < 19; i++) {
             assetid += randomIntFromInterval(0,9);
         };
+    
+    //26^12 + 1 and 256^8
+    
+        var lowerlimit = BigIntegerSM(26).pow(12);
+        lowerlimit = BigIntegerSM(lowerlimit).add(1);
+    
+        var upperlimit = BigIntegerSM(256).pow(8);
+    
+        console.log(BigIntegerSM.toJSValue(lowerlimit));
+        console.log(BigIntegerSM.toJSValue(upperlimit));
         
         return assetid;
     
@@ -639,7 +734,7 @@ function create_asset_unique(assetid_new, quantity, divisible, description, call
 
             if (assetid_unique.charAt(0) == "A") {
             
-                assetid_num = parseInt(assetid_unique.substring(1));
+                assetid_num = assetid_unique.substring(1);
                 
             } else {
                 
@@ -653,8 +748,8 @@ function create_asset_unique(assetid_new, quantity, divisible, description, call
                 
             }
 
-            
-            if (assetid_num <= 9007199254740992) { 
+//            
+//            if (assetid_num <= 9007199254740992) { 
                       
                 //var issuance_data = create_issuance_data(assetid_num, 1000, true, "testing 1-2-3");
 
@@ -665,12 +760,12 @@ function create_asset_unique(assetid_new, quantity, divisible, description, call
 
                 callback(issuance_data);
                 
-            } else {
-                
-                console.log("Asset ID is too large"); 
-                callback("error");
-                
-            }
+//            } else {
+//                
+//                console.log("Asset ID is too large"); 
+//                callback("error");
+//                
+//            }
             
         } else {
             
@@ -711,8 +806,13 @@ function create_issuance_data(assetid, quantity, divisible, description) {
         
         var initiallength = parseFloat(descriptionlength) + 39;
         var initiallength_hex = pad(initiallength.toString(16),2);
-         
-        var assetid_hex = pad(assetid.toString(16),16);
+        
+        var assetid_prehex = decToHex(assetid);
+        
+        console.log(assetid_prehex);
+        console.log(assetid_prehex.substr(2));
+        
+        var assetid_hex = pad(assetid_prehex.substr(2),16);
         
         var quantity_hex = pad(quantity_int.toString(16),16);
        

@@ -3,6 +3,8 @@
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bitcore/bitcore.min.js"></script>
     <script src="../js/mnemonic.js"></script>
+    <script src="../js/biginteger.js"></script>
+    <script src="../js/hex2dec-cs.js"></script>
     <script src="../js/xcp-js/pushtx.js"></script>
     <script src="../js/xcp-js/transactions.js"></script>
     <script src="../js/xcp-js/rc4.js"></script>
@@ -23,7 +25,7 @@ $( document ).ready(function() {
         var mnemonic = $("#mnemonic").val();
         
         var add_from = $("#add_from").val();  // sending address
-        var assetid = $("#assetid").val();  // receiving address
+        var assetidval = $("#assetid").val();  // receiving address
         
         var quantity = $("#qty").val();
         var divisible = $("#divisible").val();
@@ -35,7 +37,11 @@ $( document ).ready(function() {
 
         var transfee = 0.0001;  //bitcoin tx fee
         
-        createIssuance(add_from, assetid, quantity, divisible, description, msig_total, transfee, mnemonic);
+        createIssuance(add_from, assetidval, quantity, divisible, description, msig_total, transfee, mnemonic);
+        
+//        var testassetid = assetid("POCKETCHANGE");
+//        
+//        console.log(testassetid);
         
     });
 
