@@ -26,3 +26,14 @@ https://chain.so/tx/BTC/da6b47b20f1cb410d80cd0a4e2cec95c43315155139721801ab57efc
 03e8              = Expiration = 1000 blocks (hex to dec)
 
 ````
+
+
+https://chain.so/tx/BTC/ac489447245fff131cdd0e4246c307997c1a25509fd69a8a3623d7dbd82ca838
+
+````                    
+
+434e545250525459                                                  = CNTRPRTY prefix (hex to text)
+00000046                                                          = Transaction ID = 10 (hex to dec)
+3c0381a7cc44af01da2aee188f8896729bfcaa7fe255f68671912fd528c59f1d  = Cancel Order with this Transaction ID
+
+````
