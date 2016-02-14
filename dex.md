@@ -1,3 +1,18 @@
+https://chain.so/tx/BTC/3c5bd0fa2c977211287b1b8473878d1498a1f951c57431c6a50d42e91b35e52a
+
+````
+
+434e545250525459  = CNTRPRTY prefix (hex to text)
+0000000a          = Transaction ID = 10 (hex to dec)
+00098b174a7d3945  = Asset to Sell = 2686206940625221 = TATIANACOIN (hex to dec)
+00000022ecb25c00  = Amount to Sell = 150000000000 (hex to dec)
+0000000000000001  = Asset to Buy = 1 = XCP (hex to dec)
+0000000035a4e900  = Amount to Buy = 900000000 (hex to dec)
+03e8              = Expiration = 1000 blocks (hex to dec)
+
+````
+
+
 https://chain.so/api/v2/tx/BTC/f25b72c68f8f277ff5a92cec02ad70521a4e2219fc5342e48176bd539e0e6151
 
 ````
