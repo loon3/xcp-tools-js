@@ -53,7 +53,7 @@ https://chain.so/tx/BTC/ac489447245fff131cdd0e4246c307997c1a25509fd69a8a3623d7db
 
 ````
 
-BTC Pay from BTC Seller
+BTC Pay
 https://chain.so/tx/BTC/34e2bb5b3312630d11404880cec4b8e7bfc895124153ca5db94dd2fb3ffdf946
 
 ````
