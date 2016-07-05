@@ -9,7 +9,7 @@ https://chain.so/tx/BTC/3c5bd0fa2c977211287b1b8473878d1498a1f951c57431c6a50d42e9
 0000000000000001  = Asset to Buy = 1 = XCP (hex to dec)
 0000000035a4e900  = Amount to Buy = 900000000 (hex to dec)
 03e8              = Expiration = 1000 blocks (hex to dec)
-
+0000000000000000  = Fee Required = 0 satoshis (hex to dec)
 ````
 
 
@@ -24,7 +24,7 @@ https://chain.so/api/v2/tx/BTC/f25b72c68f8f277ff5a92cec02ad70521a4e2219fc5342e48
 00000000d806c1d5  = Asset to Buy = 3624321493 = LTBCOIN (hex to dec)
 0000046203873a20  = Amount to Buy = 4819012500000 (hex to dec)
 03e8              = Expiration = 1000 blocks (hex to dec)
-
+0000000000000000  = Fee Required = 0 satoshis (hex to dec)
 ````
 
 
@@ -39,7 +39,7 @@ https://chain.so/tx/BTC/da6b47b20f1cb410d80cd0a4e2cec95c43315155139721801ab57efc
 00000021ce5ce3ba  = Asset to Buy = 145196114874 = SCAMMIES (hex to dec)
 000000b512884100  = Amount to Buy = 777700000000 (hex to dec)
 03e8              = Expiration = 1000 blocks (hex to dec)
-
+0000000000000000  = Fee Required = 0 satoshis (hex to dec)
 ````
 
 
@@ -81,7 +81,8 @@ Outputs / Multisig Data (2)
         000000000003c3cd  = Asset to Buy = 246733 = OAZT 
         000000003b9aca00  = Amount to Buy = 1000000000
         03e8              = Expiration = 1000 blocks (hex to dec)
-        000000000000000000000000000000
+        0000000000000000  = Fee Required = 0 satoshis (hex to dec)
+        00000000000000
     
 434e545250525459 = CNTRPRTY prefix (hex to text)
 18b355d2e87d14c8a33b12c3e576c8e45013beedf70b1c7253c70dffa640aebb = Tx ID of BTC Buy Order (Buy BTC/Sell OAZT, Block 350063, XCP TX #11620756, Sent by 17FKi2)
@@ -93,7 +94,8 @@ Outputs / Multisig Data (2)
         0000000000000000  = Asset to Buy = BTC
         000000000016e360  = Amount to Buy = 1500000 satoshis
         03e8              = Expiration = 1000 blocks (hex to dec)
-        000000000000000000000000000000
+        0000000000000000  = Fee Required = 0 satoshis (hex to dec)
+        00000000000000
 
 0000000000000000000000000000000000000000000000000000000000000000000000000000
 ````
